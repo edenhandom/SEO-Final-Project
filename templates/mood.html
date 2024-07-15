@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Top Track Results</h2>
+
+<br>
+<p>Your mood is: </p><h1>{{ response }}</h1>
+<br>
+
+<ul>
+    {% for track, artists in top_tracks.items() %}
+        <li>{{ track }}: {{ artists }}</li>
+    {% endfor %}
+</ul>
+
+<br><br>
+
+    <div class="return-buttons">
+        <a class="button" href="{{ url_for('home') }}">Return Home</a>
+    </div>
+
+{% endblock %}

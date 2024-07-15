@@ -7,7 +7,7 @@ from openai import OpenAI
 import re
 import sys
 import io
-
+import base64
 
 from flask import (Flask, request, redirect, session, 
                    url_for, render_template, flash)
@@ -34,6 +34,7 @@ AUTH_URL = 'https://accounts.spotify.com/api/token'
 BASE_URL = 'https://api.spotify.com/v1/'
 
 redirect_uri = 'http://localhost:3000/callback'
+SCOPE = 'playlist-read-private user-library-read user-read-recently-played'
 
 
 def connectSpotifyAPI():
@@ -61,7 +62,7 @@ def connectSpotifyAPI():
 
 # FOR OPEN AI API
 #USER_KEY = os.environ.get("USER_KEY")
-USER_KEY = 'open_ai_key'
+USER_KEY = ''
 # Create an OpenAPI client
 client = OpenAI(api_key=USER_KEY)
 
@@ -81,6 +82,89 @@ def get_chat_response(prompt):
 
 
 @app.route('/')
+def login():
+    auth_url = f"https://accounts.spotify.com/authorize?response_type=code&client_id={CLIENT_ID}&scope={SCOPE}&redirect_uri={redirect_uri}"
+    return redirect(auth_url)
+
+
+@app.route('/callback')
+def callback():
+    code = request.args.get('code')
+    auth_token_url = 'https://accounts.spotify.com/api/token'
+    auth_token_data = {
+        'grant_type': 'authorization_code',
+        'code': code,
+        'redirect_uri': redirect_uri,
+    }
+    auth_token_headers = {
+        'Authorization': 'Basic ' + base64.b64encode((CLIENT_ID + ':' + CLIENT_SECRET).encode()).decode()
+    }
+    response = requests.post(auth_token_url, data=auth_token_data, headers=auth_token_headers)
+    response_data = response.json()
+    session['token'] = response_data['access_token']
+    return redirect(url_for('mood'))
+
+@app.route('/mood')
+def mood():
+    token = session.get('token')
+    if not token:
+        return redirect(url_for('home'))
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+    
+    profile_url = 'https://api.spotify.com/v1/me'
+    profile_response = requests.get(profile_url, headers=headers)
+    profile_data = profile_response.json()
+    
+    playlists_url = 'https://api.spotify.com/v1/me/playlists'
+    playlists_response = requests.get(playlists_url, headers=headers)
+    playlists_data = playlists_response.json()
+
+    recent_tracks_url = 'https://api.spotify.com/v1/me/player/recently-played'
+    recent_tracks_response = requests.get(recent_tracks_url, headers=headers)
+    recent_tracks_data = recent_tracks_response.json()
+
+    tracks_artists = {
+        track['track']['name']: ', '.join([artist['name'] for artist in track['track']['artists']])
+        for track in recent_tracks_data['items']
+    }
+    
+    tracks_artists_str = '. '.join([f"{track}: {artist}" for track, artist in tracks_artists.items()])
+
+
+    prompt = (
+            f"Give me a mood (like an emotional feeling) " 
+            f"based on my favorite recent songs: "
+            f"{tracks_artists_str}. "
+            f"Please give me a one word mood."
+            )
+
+    response = get_chat_response(prompt)
+
+    return render_template('mood.html', top_tracks = tracks_artists, response = response)
+
+
+
+@app.route('/top-artists')
+def top_artists():
+    token = session.get('token')
+    if not token:
+        return redirect(url_for('home'))
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+
+    top_artists_url = 'https://api.spotify.com/v1/me/top/artists'
+    top_artists_response = requests.get(top_artists_url, headers=headers)
+    top_artists_data = top_artists_response.json()
+
+    artist_names = [artist['name'] for artist in top_artists_data['items']]
+
+    return f"Top Artists: {json.dumps(artist_names, indent=4)}"
+
+
+
 @app.route('/home')
 def home():
   return render_template('home.html')
