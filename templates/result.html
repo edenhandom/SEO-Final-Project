@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}Playlist Analysis Results{% endblock %}
+
+{% block content %}
+    <h2>Playlist Analysis Results</h2>
+    <br>
+    <br>
+    <p>{{ chat_response | safe }}</p>
+    <br>
+    <br>
+    <div class="return-buttons">
+        <a class="button" href="{{ url_for('home') }}">Return Home</a>
+        <a class="button" href="{{ url_for('insights') }}">Get More Insights!</a>
+    </div>
+{% endblock %}
