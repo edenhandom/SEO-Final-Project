@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<main class="container">
+    <div class="left-side">
+        <h2 class="special-header"> Tell Us About Your... </h2>
+        <br>
+        <br>
+        <br>
+        <h3> Star Sign ★ </h3>
+        <br>
+        <p>
+            Does your astrological sign influence your music preferences? 
+            Whether you're a creative Pisces or an energetic Aries, we explore the potential connections between your star sign and the music you love!
+        </p>
+        <br>
+        <h3>  Personality Traits ☺ </h3>
+        <br>
+        <p>
+            Are you an adventurous spirit craving new beats or a mellow soul who loves soothing melodies? 
+            Share a bit about your personality to help us tailor your musical profile to find music that resonates with you!
+        </p>
+        <br>
+        <h3> Favorite Genres ♬ </h3>
+        <br>
+        <p>
+            What's a musical journey without knowing your favorite genres? 
+            Let us in on your top genre picks, and we'll reveal what they say about you.
+        </p>
+    </div>
+
+    <div class="form-container">
+        <h3 class="center">Enter Your Information </h3>
+        <br>
+        <!-- Display flashed messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form action="{{ url_for('user_form') }}" method="POST">
+            {{ form.hidden_tag() }}
+            
+            <br>
+            <div class="form-group">
+                {{ form.star_sign.label }}
+                {{ form.star_sign(size=32) }}
+            </div>
+            <br>
+            <div class="form-group">
+                {{ form.personality_traits.label }}
+                {{ form.personality_traits(rows=4, cols=50) }}
+            </div>
+            <br>
+            <div class="form-group">
+                {{ form.fav_genre1.label }}
+                {{ form.fav_genre1(size=32) }}
+            </div>
+            <br>
+            <div class="form-group">
+                {{ form.fav_genre2.label }}
+                {{ form.fav_genre2(size=32) }}
+            </div>
+            <br>
+            <div class="form-group">
+                {{ form.fav_genre3.label }}
+                {{ form.fav_genre3(size=32) }}
+            </div>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</main>
+{% endblock %}

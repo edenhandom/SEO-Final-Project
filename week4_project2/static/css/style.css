@@ -1,0 +1,373 @@
+/* static/css/style.css */
+
+/* Variable for colors and fonts */
+:root {
+  --cream: #FCF8F3; /* Main Background Color */
+  --purple: #635985;
+  --green: #B2B932;
+  --light-pink: #F5CAE8;
+  --pink: #ee6b92;
+  --orange: #ED6618;
+  --aqua: #9EC8A9;
+  --yellow: #ffe492;
+  --blue: #6EB8BE;
+  --header: "Shrikhand", serif; /* Fancy font */
+  --text: "Lato", sans-serif; /* Basic Font*/
+  --pixel: "Kode Mono", monospace; /* Receipt, console font*/
+}
+
+* {
+  padding: 0px;
+  margin: 0px;
+  /*
+  font-family: var(--text);
+  */
+  color: var(--purple);
+}
+
+body {
+  background-color: var(--cream);
+  margin: 0px;
+  font-family: var(--text);
+} 
+
+h1{
+  font-family: var(--header);
+  color: var(--green);
+}
+
+h2{
+  font-family: var(--header);
+  font-size: 2.5em;
+  color: var(--light-pink);
+}
+.special-header {
+  color: var(--blue); /* Override color for the special header */
+}
+h3{
+  font-family: var(--header);
+  font-size: 2.0em;
+  color: var(--orange);
+}
+
+p {
+  line-height: 1.5em;
+}
+
+a {
+  text-decoration: none;
+}
+
+.features a:hover {
+  color: #9EC8A9; 
+  background-color: #f6dc8e;
+  box-shadow: 1px 1px #9EC8A9;
+  text-decoration: none;
+}
+
+.home-box {
+  /* display: block;
+  width: 100%;
+  margin-bottom: 10vh;
+  
+  flex: 1;
+  */
+
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.container {
+  display: flex; /* inline-block*/
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.left-side {
+  /* padding: 20px; */ 
+  flex: 1;
+  margin-right: 40px;
+}
+
+.image {
+  flex: 1;
+  text-align: center;
+  overflow: hidden; /* Ensures the image does not overflow its container */
+  position: relative; /* This makes the container a positioning context for the overlay text */
+  margin-bottom: 20px;
+}
+
+.image a {
+  display: inline-block; 
+  position: relative; 
+  text-decoration: none; 
+  color: inherit; 
+}
+.image img {
+  max-width: 100%;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+.image img:hover {
+  transform: scale(1.1); /* Enlarges the image by 10% on hover */
+}
+
+.text-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--cream);
+  font-size: 1em;
+  font-family: var(--header);
+  background-color: rgba(0,0,0,0);
+  padding: 10px;
+  border-radius: 5px;
+}
+/* Nav Bar Styles */
+nav {
+  width: auto;
+
+  border-style: solid;
+  border-color: rgba(99, 89, 133, 0.482);
+  border-width: 0pc 0px 2px 0px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 30px 7vw 20px 7vw;
+}
+
+.features {
+  display: flex;
+  gap: 20px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.button {
+  font-family: var(--text);
+  color: var(--aqua);
+  font-weight: bold;
+  font-size: .8em;
+  text-align: center;
+
+  padding: 5px;
+
+  border: solid var(--aqua) 2px;
+  background-color: var(--yellow);
+
+  min-width: 9vw;
+
+  box-shadow: 2px 2px var(--aqua);
+}
+
+#body {
+  margin: 10vh 10vw 10vh 10vw;
+}
+
+#webtitle {
+  font-family: var(--header);
+  font-size: 1.5rem;
+  color: var(--green);
+  flex-grow: 1;
+  text-align: left;
+}
+
+#login {
+  margin-left: auto;
+}
+
+
+/* USER FORM */
+button[type="submit"]:hover {
+  background-color: #A6BA1A;
+}
+
+button[type="submit"] {
+            
+  background-color: #EE6A92;
+  color: #FFF6ED;
+  border: none;
+  padding: 12px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  font-family: 'Shrikhand', cursive; /* Change font to Shrikhand */
+}
+
+.center {
+  text-align: center;
+}
+
+
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #6EB8BE;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+  margin-top: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Ensures padding and border are included in the width */
+}
+
+/* For Insights Page*/
+
+div.insights {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+div.container-output {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 75%;
+  height: 60vh;
+  border: 5px solid black;
+  border-radius: 15px;
+  margin: 10px 0px;
+
+}
+
+.form-container input[type="text"], .form-container textarea {
+  font-family: var(--pixel), monospace;
+}
+
+
+input#playlist-url {
+  width: 60%;
+  height: 30px;
+  border-radius: 5px;
+  border: 2px solid black;
+  margin: 10px 0px;
+
+}
+
+/* Adjust the height for smaller screens */
+@media (max-width: 600px) {
+  .container-output {
+      height: 70vh; /* 70% of the viewport height for small screens */
+  }
+}
+
+/* Adjust the height for larger screens */
+@media (min-width: 1200px) {
+  .container-output {
+      height: 30vh; /* 30% of the viewport height for large screens */
+  }
+}
+
+/* Result page */
+
+/* Targets preview songs */
+.audio-container {
+  display: flex;
+  align-items: center;
+}
+
+.audio-button {
+  cursor: pointer;
+  background-color: #00000000;
+  padding: 5px;
+  border: none;
+}
+.audio-button:hover {
+  color: #463e5e;
+}
+
+.audio-time {
+  margin-left: 10px;
+}
+
+.mono-font {
+  font-family: var(--pixel), monospace;
+}
+
+
+
+
+td, .song {
+  font-family: var(--pixel) !important; /* Use Shrikhand font with higher specificity */
+  padding: 10px;
+  border-bottom: 1px dotted var(--purple);
+}
+
+
+.text-boarder {
+  text-shadow:
+  2px 2px var(--pink),   /* Bottom-right shadow */
+  -2px -2px var(--pink), /* Top-left shadow */
+  -2px 2px var(--orange),  /* Bottom-left shadow */
+  2px -2px var(--orange);  /* Top-right shadow */
+
+}
+
+/* SUbmit Page formatting */
+.submit-content {
+  width: 100%;
+  display: inline-block;
+}
+
+.songreceipt {
+  font-size: 1em;
+  color: var(--purple);
+  padding: 5vw 5vw;
+  box-shadow: 5px 5px #63598596;
+  background-image: url("https://i.pinimg.com/736x/c5/11/6c/c5116cc0374e2273eb888d9f6fd4feae.jpg");
+  width: 30%;
+  float: right;
+
+}
+
+.songreceipt table{
+  width: auto;
+}
+
+.left {
+  width: 50%;
+  float: left;
+}
+
+.left h1 {
+  color: var(--orange);
+  font-size: 2em;
+}
+
+.left h3 {
+  color: var(--aqua);
+  font-size: 1.5em;
+}
