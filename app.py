@@ -46,7 +46,7 @@ SCOPE = 'playlist-read-private user-library-read user-read-recently-played'
 
 # FOR OPEN AI API
 #USER_KEY = os.environ.get("USER_KEY")
-USER_KEY = 'sk-proj-31QSXO181eskug3mK5brT3BlbkFJg7JpiWP0ZSzQPm0uUw1g'
+USER_KEY = ''
 client = OpenAI(api_key=USER_KEY)
 
 
