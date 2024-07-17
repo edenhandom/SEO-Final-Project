@@ -52,8 +52,6 @@ client = OpenAI(api_key=USER_KEY)
 
 @app.route('/')
 def login():
-    session.clear()
-    print("Session cleared")
     auth_url = f"https://accounts.spotify.com/authorize?response_type=code&client_id={CLIENT_ID}&scope={SCOPE}&redirect_uri={redirect_uri}&show_dialog=True"
     return redirect(auth_url)
 
@@ -73,7 +71,7 @@ def callback():
     response = requests.post(auth_token_url, data=auth_token_data, headers=auth_token_headers)
     response_data = response.json()
     session['token'] = response_data['access_token']
-    return redirect(url_for('mood'))
+    return redirect(url_for('home'))
 
 @app.route('/mood')
 def mood():
@@ -110,10 +108,10 @@ def mood():
     }
     tracks_artists_str = '. '.join([f"{track}: {artist}" for track, artist in tracks_artists.items()])
     prompt = (
-            f"Give me a mood (like an emotional feeling) " 
+            f"Give me a mood (like an emotion) " 
             f"based on my favorite recent songs: "
             f"{tracks_artists_str}. "
-            f"Please give me a one word mood."
+            f"Please give me a one or two word mood."
             )
 
     response = get_chat_response(prompt)
@@ -149,7 +147,6 @@ def top_artists():
 
 @app.route('/home')
 def home():
-  session.clear()
   return render_template('home.html')
 
 
