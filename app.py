@@ -8,23 +8,30 @@ import re
 import sys
 import io
 import base64
+import logging
+
+#from spotipy import Spotify
+#from spotipy.oauth2 import SpotifyOAuth
 
 from flask import (Flask, request, redirect, session, 
-                   url_for, render_template, flash)
+                   url_for, render_template, flash, make_response)
 
+
+'''
+Import our modules
+'''
 from user_form import UserForm
-
 from pull_playlist import *
 
-from spotipy import Spotify
-from spotipy.oauth2 import SpotifyOAuth
 
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__) # static_folder="static", static_url_path=""
 app.config['SECRET_KEY'] = os.urandom(64)
 
-# FOR SPOTIFY API
 
+# FOR SPOTIFY API
 #CLIENT_ID = os.environ.get("SPOTIFY_CLIENT_ID")
 CLIENT_ID = 'ad91a46157df4ba080456f92c7a74ef8'
 #CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET")
@@ -37,53 +44,17 @@ redirect_uri = 'http://localhost:3000/callback'
 SCOPE = 'playlist-read-private user-library-read user-read-recently-played'
 
 
-def connectSpotifyAPI():
-
-    client_id = CLIENT_ID
-    client_secret = CLIENT_SECRET
-
-    # Make a POST request to get the access token
-    auth_response = requests.post(
-        AUTH_URL,
-        {
-            'grant_type': 'client_credentials',
-            'client_id': client_id,
-            'client_secret': client_secret
-        }
-    )
-    # Check that the status code of the POST request is valid
-    if auth_response.status_code == 200:
-        return auth_response.json()
-    else:
-        print("Post request failed :(")
-        print("Status Code: ", auth_response.status_code)
-        return None
-
-
 # FOR OPEN AI API
 #USER_KEY = os.environ.get("USER_KEY")
-USER_KEY = ''
-# Create an OpenAPI client
+USER_KEY = 'sk-proj-31QSXO181eskug3mK5brT3BlbkFJg7JpiWP0ZSzQPm0uUw1g'
 client = OpenAI(api_key=USER_KEY)
-
-
-# Get response from Chat GPT
-def get_chat_response(prompt):
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo-16k",
-        messages=[
-            {"role": "system", "content": 
-            ("You are a musical genius that's good at reading people.")},
-            {"role": "user", "content": prompt}
-            ]
-    )
-    message = response.choices[0].message.content
-    return message
 
 
 @app.route('/')
 def login():
-    auth_url = f"https://accounts.spotify.com/authorize?response_type=code&client_id={CLIENT_ID}&scope={SCOPE}&redirect_uri={redirect_uri}"
+    session.clear()
+    print("Session cleared")
+    auth_url = f"https://accounts.spotify.com/authorize?response_type=code&client_id={CLIENT_ID}&scope={SCOPE}&redirect_uri={redirect_uri}&show_dialog=True"
     return redirect(auth_url)
 
 
@@ -114,8 +85,16 @@ def mood():
     }
     
     profile_url = 'https://api.spotify.com/v1/me'
-    profile_response = requests.get(profile_url, headers=headers)
-    profile_data = profile_response.json()
+
+    try: 
+        profile_response = requests.get(profile_url, headers=headers)
+        profile_data = profile_response.json()
+
+    except requests.exceptions.JSONDecodeError:
+        print(profile_response.status_code)
+        print("HTTP RESPONSE")
+
+    # profile_data = profile_response.json()
     
     playlists_url = 'https://api.spotify.com/v1/me/playlists'
     playlists_response = requests.get(playlists_url, headers=headers)
@@ -129,10 +108,7 @@ def mood():
         track['track']['name']: ', '.join([artist['name'] for artist in track['track']['artists']])
         for track in recent_tracks_data['items']
     }
-    
     tracks_artists_str = '. '.join([f"{track}: {artist}" for track, artist in tracks_artists.items()])
-
-
     prompt = (
             f"Give me a mood (like an emotional feeling) " 
             f"based on my favorite recent songs: "
@@ -144,6 +120,13 @@ def mood():
 
     return render_template('mood.html', top_tracks = tracks_artists, response = response)
 
+
+@app.route('/clear-session')
+def clear_session():
+    session.clear()
+    response = make_response(redirect(url_for('login')))
+    response.set_cookie('session', '', expires=0)
+    return response
 
 
 @app.route('/top-artists')
@@ -164,9 +147,9 @@ def top_artists():
     return f"Top Artists: {json.dumps(artist_names, indent=4)}"
 
 
-
 @app.route('/home')
 def home():
+  session.clear()
   return render_template('home.html')
 
 
@@ -186,20 +169,6 @@ def user_form():
         return redirect(url_for('submit_page'))
     
     return render_template('user_form.html', title='Info', form=form)
-
-
-# Get response from Chat GPT
-def get_chat_response(prompt):
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo-16k",
-        messages=[
-            {"role": "system", "content": 
-            ("You are a musical genius that's good at reading people.")},
-            {"role": "user", "content": prompt}
-            ]
-    )
-    message = response.choices[0].message.content
-    return message
 
 
 # For submission page, brings user here after they submit form
@@ -242,55 +211,6 @@ def submit_page():
                                )
     else:
         return redirect(url_for('user_form'))
-
-
-# Extract a song title from Chat GPT response
-def extract_song_titles(input_string):
-
-    # Regular expression pattern to match the song titles
-    pattern = r'"([^"]+)"'
-    # Using re.findall to extract all occurrences of the pattern
-    matches = re.findall(pattern, input_string)
-    # Return the list of song titles
-    return matches
-
-
-# Get a song link from a track ID
-def get_song_link(track_id):
-    base_url = 'https://open.spotify.com/track/'
-    track_link = base_url + track_id
-    return track_link
-
-
-# Get track id, artist, and song preview url from track name
-def get_song_data(track_name):
-
-    auth_response_data = connectSpotifyAPI()
-
-    if 'access_token' in auth_response_data:
-        access_token = auth_response_data['access_token']
-        headers = {'Authorization': f'Bearer {access_token}'}
-
-        response = requests.get(
-            f"{BASE_URL}search",
-            headers=headers,
-            params={'q': f'track:{track_name}',
-                    'type': 'track',
-                    'limit': 1}
-                )
-        if response.status_code == 200:
-            search_results = response.json()
-            tracks = search_results.get('tracks', {}).get('items', [])
-
-            if tracks:
-                track = tracks[0]
-                track_id = track['id']
-                preview_url = track.get('preview_url')
-                artist_name = [artist['name'] for artist in track['artists']]
-
-                return track_id, preview_url, artist_name
-        
-    return None, None, None
 
               
 @ app.route('/', methods=['GET', 'POST'])
