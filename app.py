@@ -16,7 +16,6 @@ Import our modules
 '''
 from user_form import UserForm
 
-
 app = Flask(__name__) # static_folder="static", static_url_path=""
 app.config['SECRET_KEY'] = os.urandom(64)   # generate random session key
 
@@ -51,7 +50,7 @@ def callback():
 def home():
   return render_template('home.html')
 
-
+# Route to provide user with a mood based on their recently played tracks
 @app.route('/mood')
 def mood():
     recent_tracks_data = spotify_client.get_recent_tracks()
