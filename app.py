@@ -51,26 +51,15 @@ def home():
   return render_template('home.html')
 
 
+# Route to provide user with a mood based on their recently played tracks
 @app.route('/mood')
 def mood():
-    """
-    Currently:
-        When you click on the mood option, it just gives you a mood
-        without listing your artists. Its not connected to the function
-        yet
-    
-    What I want:
-        When you click on the mood option, I dont want it to give me a
-        response immediately. I want to have a UI where I can 
-    """
-
-
-    # Dictioanry of songs and artists
-    tracks_artists = {}
-    # Readable string of playlist songs
-    tracks_artists_str = ""
-
-
+    recent_tracks_data = spotify_client.get_recent_tracks()
+    tracks_artists = {
+            track['track']['name']: ', '.join([artist['name'] for artist in track['track']['artists']])
+            for track in recent_tracks_data['items']
+        }
+    tracks_artists_str = '. '.join([f"{track}: {artist}" for track, artist in tracks_artists.items()])
     prompt = (
             f"Give me a mood (an emotion) " 
             f"based on my favorite recent songs: "
