@@ -50,13 +50,15 @@ def callback():
 def home():
   return render_template('home.html')
 
-
+# Route to provide user with a mood based on their recently played tracks
 @app.route('/mood')
 def mood():
-    # Dictioanry of songs and artists
-    tracks_artists = {}
-    # Readable string of playlist songs
-    tracks_artists_str = ""
+    recent_tracks_data = spotify_client.get_recent_tracks()
+    tracks_artists = {
+            track['track']['name']: ', '.join([artist['name'] for artist in track['track']['artists']])
+            for track in recent_tracks_data['items']
+        }
+    tracks_artists_str = '. '.join([f"{track}: {artist}" for track, artist in tracks_artists.items()])
     prompt = (
             f"Give me a mood (an emotion) " 
             f"based on my favorite recent songs: "
@@ -121,13 +123,27 @@ def submit_page():
         star_sign = user_data.get('star_sign', 'Unknown')
         personality_traits = user_data.get('personality_traits', 'Unknown')
         fav_genre1 = user_data.get('fav_genre1', 'Unknown')
+        example1 = user_data.get('optional_field1', 'Unknown')
         fav_genre2 = user_data.get('fav_genre2', 'Unknown')
+        example2 = user_data.get('optional_field2', 'Unknown')
         fav_genre3 = user_data.get('fav_genre3', 'Unknown')
+        example3 = user_data.get('optional_field3', 'Unknown')
+
+        history_prompt = user_data.get('include_history', 'Unknown')
+
+        if history_prompt=='yes':
+            pass
+        else:
+            pass
 
         prompt = (
             f"Give me a playlist of recommended songs based on my "
-            f"star sign: {star_sign}, personality traits: {personality_traits}, "
-            f"and my preference of these genres: {fav_genre1}, {fav_genre2}, {fav_genre3}. "
+            f"star sign: {star_sign}, "
+            f"personality traits: {personality_traits}, "
+            f"and my preference of these genres: "
+            f"{fav_genre1} similar to {example1}, " 
+            f"{fav_genre2} similar to {example2}, "
+            f"{fav_genre3} similar to {example3}. "
             f"Please list each song on a new line, song title only in quotes. "
             f"Format like: 'Song1'\n 'Song2'\n...'"
             )
