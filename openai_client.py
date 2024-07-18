@@ -8,6 +8,7 @@ class OpenAIClient:
         openai.api_key = self.api_key
 
 
+    # Provide prompt to Chat GPT then receive response
     def get_chat_response(self, prompt):
         response = openai.chat.completions.create(
             model="gpt-3.5-turbo-16k",
