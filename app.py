@@ -15,9 +15,6 @@ from openai_client import OpenAIClient
 Import our modules
 '''
 from user_form import UserForm
-from pull_playlist import *
-from insights_module import *
-
 
 app = Flask(__name__) # static_folder="static", static_url_path=""
 app.config['SECRET_KEY'] = os.urandom(64)   # generate random session key
