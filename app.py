@@ -1,10 +1,12 @@
 import os
 import json
+import uuid
 import requests
 from flask import (Flask, request, redirect, session, 
                    url_for, render_template, flash, make_response)
 from flask_session import Session
 from datetime import timedelta
+import pandas as pd
 
 
 ''''
@@ -18,6 +20,9 @@ from openai_client import OpenAIClient
 Import our modules
 '''
 from user_form import UserForm
+
+# Initialize a global DataFrame to store recommended songs
+recommended_songs_df = pd.DataFrame(columns=['song', 'artist', 'track_id', 'preview_url', 'user_id'])
 
 
 app = Flask(__name__) # static_folder="static", static_url_path=""
@@ -44,6 +49,7 @@ user_session = UserSession()
 @app.route('/')
 def login():
     session.permanent = True  # Make the session permanent
+    session['user_id'] = str(uuid.uuid4())  # Generate a unique user ID
     return redirect(spotify_client.get_auth_url())
 
 # Callback route to handle the redirect from Spotify
@@ -128,8 +134,12 @@ def user_form():
 # Displays playlist based on input
 @app.route('/submit_page')
 def submit_page():
+    
+    global recommended_songs_df  # Access the global DataFrame
+    
     # Retrieve user data from session
     user_data = session.get('user_data', None)
+    user_id = session.get('user_id')
     
     if user_data:
         star_sign = user_data.get('star_sign', 'Unknown')
@@ -191,6 +201,11 @@ def submit_page():
         for song in song_with_preview:
             song['link'] = spotify_client.get_song_link(song['track_id'])
 
+        # Add the recommendations to the DataFrame
+        new_rows = pd.DataFrame(song_with_preview)
+        new_rows['user_id'] = user_id
+        recommended_songs_df = pd.concat([recommended_songs_df, new_rows], ignore_index=True)
+
         return render_template('submit_page.html', 
                                title='Submitted Data', 
                                user_data = user_data, 
@@ -198,6 +213,18 @@ def submit_page():
                                )
     else:
         return redirect(url_for('user_form'))
+
+
+@app.route('/view_recommendations')
+def view_recommendations():
+    global recommended_songs_df
+    user_id = session.get('user_id')
+    
+    # Filter the DataFrame for the current user's recommendations
+    user_recommendations = recommended_songs_df[recommended_songs_df['user_id'] == user_id]
+    
+    return render_template('view_recommendation.html', recommendations=user_recommendations.to_dict(orient='records'))
+
 
 
 # Displays personal insight based on provided playlist 
