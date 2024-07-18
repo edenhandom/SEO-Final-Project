@@ -57,18 +57,29 @@
             <div class="form-group">
                 {{ form.fav_genre1.label }}
                 {{ form.fav_genre1(size=32) }}
+                {{ form.optional_field1(size=32) }}
+
             </div>
             <br>
             <div class="form-group">
                 {{ form.fav_genre2.label }}
                 {{ form.fav_genre2(size=32) }}
+                {{ form.optional_field2(size=32) }}
             </div>
             <br>
             <div class="form-group">
                 {{ form.fav_genre3.label }}
                 {{ form.fav_genre3(size=32) }}
+                {{ form.optional_field3(size=32) }}
+
             </div>
             <br>
+            <div class="form-group">
+                <br>
+                {{ form.include_history.label }}
+                {{ form.include_history() }}
+            </div>
+
             <button type="submit">Submit</button>
         </form>
     </div>
