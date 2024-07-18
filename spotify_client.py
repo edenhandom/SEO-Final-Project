@@ -179,33 +179,7 @@ class SpotifyClient:
 
         return None, None, None
 
-    # Provides user with their mood based on their recently listened tracks
-    def mood(self):
-        token = session.get('token')
-        if not token:
-            return redirect(url_for('home'))
-        
-        headers = {
-            'Authorization': f'Bearer {token}'
-        }
 
-        profile_url = f"{self.BASE_URL}me"
-
-        profile_response = requests.get(profile_url, headers=headers)
-        profile_data = profile_response.json()  # What is the purpose of this?
-
-        playlists_url = 'https://api.spotify.com/v1/me/playlists'
-        playlists_response = requests.get(playlists_url, headers=headers)
-        playlists_data = playlists_response.json() # What is the purpose of this?
-
-        recent_tracks_url = 'https://api.spotify.com/v1/me/player/recently-played'
-        recent_tracks_response = requests.get(recent_tracks_url, headers=headers)
-        recent_tracks_data = recent_tracks_response.json()
-
-        tracks_artists = {
-            track['track']['name']: ', '.join([artist['name'] for artist in track['track']['artists']])
-            for track in recent_tracks_data['items']
-        }
-        tracks_artists_str = '. '.join([f"{track}: {artist}" for track, artist in tracks_artists.items()])
-
-        return render_template('mood.html', top_tracks=tracks_artists, response=tracks_artists_str)
+# Usage example:
+# test = SpotifyClient(client_id, client_secret, redirect_uri, scope)
+# print(test.get_profile_data())
