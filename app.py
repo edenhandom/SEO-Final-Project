@@ -50,6 +50,7 @@ def callback():
 def home():
   return render_template('home.html')
 
+
 # Route to provide user with a mood based on their recently played tracks
 @app.route('/mood')
 def mood():
@@ -79,16 +80,8 @@ def clear_session():
 
 @app.route('/top-artists')
 def top_artists():
-    token = session.get('token')
-    if not token:
-        return redirect(url_for('home'))
-    headers = {
-        'Authorization': f'Bearer {token}'
-    }
 
-    top_artists_url = 'https://api.spotify.com/v1/me/top/artists'
-    top_artists_response = requests.get(top_artists_url, headers=headers)
-    top_artists_data = top_artists_response.json()
+    top_artists_data = SpotifyClient.get_top_artists()
 
     artist_names = [artist['name'] for artist in top_artists_data['items']]
 
