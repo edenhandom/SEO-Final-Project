@@ -68,7 +68,7 @@ def home():
 
 
 # Route to provide user with a mood based on their recently played tracks
-@app.route('/mood')
+@app.route('/mood', methods=['GET', 'POST'])
 def mood():
     recent_tracks_data = spotify_client.get_recent_tracks()
     tracks_artists = {
@@ -76,14 +76,38 @@ def mood():
             for track in recent_tracks_data['items']
         }
     tracks_artists_str = '. '.join([f"{track}: {artist}" for track, artist in tracks_artists.items()])
-    prompt = (
-            f"Give me a mood (an emotion) " 
-            f"based on my favorite recent songs: "
-            f"{tracks_artists_str}. "
-            f"Please give me a one or two word mood."
-            )
-    response = openai_client.get_chat_response(prompt)
-    return render_template('mood.html', top_tracks = tracks_artists, response = response)
+    
+    action = None
+    response = None
+    user_mood = None
+
+    if request.method == 'POST':
+        action = request.form.get('action')
+        
+        if action == 'request_mood':
+            prompt = (
+                    f"Give me a mood (an emotion) " 
+                    f"based on my favorite recent songs: "
+                    f"{tracks_artists_str}. "
+                    f"Please give me a one or two word mood."
+                    )
+            response = openai_client.get_chat_response(prompt)
+        
+        elif action == 'submit_mood':
+            user_mood = request.form.get('user_mood')
+            if user_mood:
+                prompt = (
+                    f"Give me a playlist of songs that match the mood '{user_mood}'. "
+                    f"Here are some of my favorite recent songs: {tracks_artists_str}. "
+                    f"Please list each song on a new line, song title only in quotes. "
+                    f"Format like: 'Song1'\n 'Song2'\n..."
+                )
+
+                raw_response = openai_client.get_chat_response(prompt)
+                response = raw_response.split('\n')  # Split the response into a list of songs
+
+    
+    return render_template('mood.html', top_tracks=tracks_artists, response=response, action=action, user_mood=user_mood)
 
 
 @app.route('/clear-session')
@@ -197,7 +221,12 @@ def submit_page():
         # Add the recommendations to the DataFrame
         new_rows = pd.DataFrame(song_with_preview)
         new_rows['user_id'] = user_id
+        print("New rows to be added:")
+        print(new_rows)
+
         recommended_songs_df = pd.concat([recommended_songs_df, new_rows], ignore_index=True)
+        print("Updated DataFrame:")
+        print(recommended_songs_df)
 
         return render_template('submit_page.html', 
                                title='Submitted Data', 
@@ -215,6 +244,7 @@ def view_recommendations():
     
     # Filter the DataFrame for the current user's recommendations
     user_recommendations = recommended_songs_df[recommended_songs_df['user_id'] == user_id]
+    print(user_recommendations)
     
     return render_template('view_recommendation.html', recommendations=user_recommendations.to_dict(orient='records'))
 

@@ -1,22 +1,44 @@
+<!-- templates/mood.html -->
 {% extends "layout.html" %}
 
 {% block content %}
 <h2>Top Track Results</h2>
 
-<br>
-<p>Your mood is: </p><h1>{{ response }}</h1>
+<form method="POST">
+    <div class="form-group">
+        <button type="submit" name="action" value="request_mood">Request Mood</button>
+    </div>
+
+    <div class="form-group">
+        <input type="text" name="user_mood" placeholder="Enter your mood">
+        <button type="submit" name="action" value="submit_mood">Submit Mood</button>
+    </div>
+</form>
+
 <br>
 
-<ul>
-    {% for track, artists in top_tracks.items() %}
-        <li>{{ track }}: {{ artists }}</li>
-    {% endfor %}
-</ul>
+{% if action == 'request_mood' and response %}
+    <p>Your mood is: </p><h1>{{ response }}</h1>
+    <br>
+    <ul>
+        {% for track, artists in top_tracks.items() %}
+            <li>{{ track }}: {{ artists }}</li>
+        {% endfor %}
+    </ul>
+{% elif action == 'submit_mood' and response %}
+    <p>Playlist based on your mood "{{ user_mood }}":</p>
+    <br>
+    <ul>
+        {% for song in response %}
+            <li>{{ song }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 
 <br><br>
 
-    <div class="return-buttons">
-        <a class="button" href="{{ url_for('home') }}">Return Home</a>
-    </div>
+<div class="return-buttons">
+    <a class="button" href="{{ url_for('home') }}">Return Home</a>
+</div>
 
 {% endblock %}
