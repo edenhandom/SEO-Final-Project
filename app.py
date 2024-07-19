@@ -74,7 +74,7 @@ def home():
 
 
 # Route to provide user with a mood based on their recently played tracks
-@app.route('/mood')
+@app.route('/mood', methods=['GET', 'POST'])
 def mood():
     recent_tracks_data = spotify_client.get_recent_tracks()
     tracks_artists = {
@@ -82,15 +82,65 @@ def mood():
             for track in recent_tracks_data['items']
         }
     tracks_artists_str = '. '.join([f"{track}: {artist}" for track, artist in tracks_artists.items()])
-    prompt = (
-            f"Give me a mood (an emotion) " 
-            f"based on my favorite recent songs: "
-            f"{tracks_artists_str}. "
-            f"Please give me a one or two word mood."
-            )
-    response = openai_client.get_chat_response(prompt)
-    return render_template('mood.html', top_tracks = tracks_artists, response = response)
+    
+    action = None
+    response = None
+    user_mood = None
+    mood_response = ''
 
+    if request.method == 'POST':
+        action = request.form.get('action')
+        
+        if action == 'request_mood':
+            prompt = (
+                    f"Give me a mood (an emotion) " 
+                    f"based on my favorite recent songs: "
+                    f"{tracks_artists_str}. "
+                    f"Please give me a one or two word mood."
+                    )
+            mood_response = openai_client.get_chat_response(prompt)
+            
+            # Transform recent tracks into the same format as the playlist
+            song_with_preview = []
+            for track in recent_tracks_data['items']:
+                track_id = track['track']['id']
+                song = track['track']['name']
+                artist = ', '.join([artist['name'] for artist in track['track']['artists']])
+                preview_url = track['track']['preview_url']
+                song_with_preview.append({'song': song, 'artist': artist, 'track_id': track_id, 'preview_url': preview_url})
+            
+            for song in song_with_preview:
+                song['link'] = spotify_client.get_song_link(song['track_id'])
+
+            response = song_with_preview
+
+        
+        elif action == 'submit_mood':
+            user_mood = request.form.get('user_mood')
+            if user_mood:
+                prompt = (
+                    f"Give me a playlist of songs that match the mood '{user_mood}'. "
+                    f"Here are some of my favorite recent songs: {tracks_artists_str}. "
+                    f"Do not give me any songs from my recent songs."
+                    f"Please list each song on a new line, song title only in quotes. "
+                    f"Format like: 'Song1'\n 'Song2'\n..."
+                )
+
+                raw_response = openai_client.get_chat_response(prompt)
+                song_list = spotify_client.extract_song_titles(raw_response)
+                
+                song_with_preview = []
+                for song in song_list:
+                    track_id, preview_url, artist_name = spotify_client.get_song_data(song)
+                    if track_id and preview_url and artist_name:
+                        song_with_preview.append({'song': song, 'artist': artist_name, 'track_id': track_id, 'preview_url': preview_url})
+
+                for song in song_with_preview:
+                    song['link'] = spotify_client.get_song_link(song['track_id'])
+
+                response = song_with_preview
+
+    return render_template('mood.html', top_tracks=tracks_artists, response=response, action=action, user_mood=user_mood, mood_response=mood_response)
 
 @app.route('/clear-session')
 def clear_session():
