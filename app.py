@@ -36,10 +36,10 @@ CLIENT_ID = os.environ.get("CLIENT_ID")
 CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
 USER_KEY = os.environ.get("USER_KEY")
 SCOPE = 'playlist-read-private user-library-read user-read-recently-played'
-REDIECT_URI = 'http://localhost:3000/callback'
+REDIRECT_URI = os.environ.get("REDIRECT_URI")
 
 # Connect to the spotify API
-spotify_client = SpotifyClient(CLIENT_ID, CLIENT_SECRET, REDIECT_URI, SCOPE)
+spotify_client = SpotifyClient(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPE)
 # Connect to OpenAI API
 openai_client = OpenAIClient(USER_KEY)
 # Start user session
