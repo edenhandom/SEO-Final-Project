@@ -1,9 +1,8 @@
 /* Universal Rules */
 :root {
-
   /* Colors */
-  --screen-color: #ABBBD2;
-  --ipod-text-color: #272A4B;
+  --screen-color: #abbbd2;
+  --ipod-text-color: #272a4b;
 
   /* Ipod Stuff */
   --ipod-width: 325px;
@@ -21,10 +20,9 @@
   --subheader: 1em;
 }
 
-
 /********************* GENERAL PAGE STUFF *********************/
 
-*{
+* {
   padding: 0px;
   margin: 0px;
 }
@@ -44,7 +42,29 @@ p {
 
 /********************* PAGE HEADER / LAYOUT *********************/
 
+/* Layout for Login and Home Pages */
+
 #template {
+  width: 100vw;
+  height: 100vh;
+
+  color: var(--ipod-text-color);
+  font-family: var(--main-font);
+
+  display: grid;
+  grid-template-areas:
+    "header"
+    "content";
+  grid-template-columns: 1fr;
+  grid-template-rows: 15vh auto;
+  gap: 1px;
+
+  overflow: hidden; /* So the whole page wont scroll */
+}
+
+/* Layout for Content Pages */
+
+#template-layout {
   width: 100vw;
   height: 100vh;
 
@@ -82,7 +102,7 @@ p {
 
 #page-header a {
   text-decoration: none;
-  color: var(--ipod-text-color)
+  color: var(--ipod-text-color);
 }
 
 /* The menu is fixed and un moving! */
@@ -110,6 +130,10 @@ p {
   overflow-y: auto;
 }
 
+#content-block {
+  grid-area: content;
+}
+
 /********************* IPOD (MENU) *********************/
 
 #ipod {
@@ -118,10 +142,11 @@ p {
   position: relative;
 
   font-family: "Pixelify Sans", sans-serif;
-
 }
 
-#ipod img {width: var(--ipod-width);}
+#ipod img {
+  width: var(--ipod-width);
+}
 
 .screen {
   width: var(--screen-width);
@@ -184,5 +209,3 @@ p {
   margin-bottom: calc(var(--ipod-width) / 200);
   font-size: var(--ipod-text-size);
 }
-
-

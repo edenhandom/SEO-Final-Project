@@ -19,15 +19,12 @@
 </head>
 
 <body>
-  <div id="template-layout">
+  <div id="template">
     <div id="page-header">
       <a href="home.html"><h1>Mood Mix</h1></a>
     </div>
 
-    <div id="menu-side">
-      {% include "nav_bar.html" %}
-    </div>
-    <div id="content-side">
+    <div id="content-block">
       {% block content %}
       This is where module content would go!
       {% endblock %}   

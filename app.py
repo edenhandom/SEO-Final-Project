@@ -45,8 +45,14 @@ openai_client = OpenAIClient(USER_KEY)
 # Start user session
 user_session = UserSession()
 
-# Route to start the authorization process
+# First page that User sees. A login page
 @app.route('/')
+def login_page():
+    return render_template('login_page.html')
+
+
+# Route to start the authorization process
+@app.route('/login')
 def login():
     session.permanent = True  # Make the session permanent
     session['user_id'] = str(uuid.uuid4())  # Generate a unique user ID
