@@ -1,11 +1,5 @@
+<!-- IPOD LOGIN MENU -->
 {% extends "foundation.html" %}
-
-    {% block content %}
-        <div id="ipod">
-            <img src="/static/images/ipod1.png"  alt="aura circle for insights page">
-            <div class="screen" id="menu">
-                <div><a>Mood Mix</a></div>
-                <div><a href="login"><h6>Login</h6><p> &gt; </p></a></div>
-            </div>
-        </div>
-    {% endblock %}
+{% block content %}
+    {% include "login_menu.html" %}
+{% endblock %}
