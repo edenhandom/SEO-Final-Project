@@ -180,6 +180,5 @@ class SpotifyClient:
         return None, None, None
 
 
-# Usage example:
-# test = SpotifyClient(client_id, client_secret, redirect_uri, scope)
-# print(test.get_profile_data())
+        return render_template('mood.html', top_tracks=tracks_artists, response=tracks_artists_str)
+      

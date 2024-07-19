@@ -1,8 +1,13 @@
 import os
 import json
+import uuid
 import requests
 from flask import (Flask, request, redirect, session, 
                    url_for, render_template, flash, make_response)
+from flask_session import Session
+from datetime import timedelta
+import pandas as pd
+
 
 ''''
 Import our Classes
@@ -16,9 +21,16 @@ Import our modules
 '''
 from user_form import UserForm
 
+# Initialize a global DataFrame to store recommended songs
+recommended_songs_df = pd.DataFrame(columns=['song', 'artist', 'track_id', 'preview_url', 'user_id'])
+
+
 app = Flask(__name__) # static_folder="static", static_url_path=""
 app.config['SECRET_KEY'] = os.urandom(64)   # generate random session key
-
+# Configure session to use filesystem (server-side session storage)
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)  # Set session lifetime to 7 days
+Session(app)
 
 CLIENT_ID = os.environ.get("CLIENT_ID")
 CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
@@ -36,6 +48,8 @@ user_session = UserSession()
 # Route to start the authorization process
 @app.route('/')
 def login():
+    session.permanent = True  # Make the session permanent
+    session['user_id'] = str(uuid.uuid4())  # Generate a unique user ID
     return redirect(spotify_client.get_auth_url())
 
 # Callback route to handle the redirect from Spotify
@@ -46,9 +60,12 @@ def callback():
     user_session.set_token(spotify_client.token)
     return redirect(url_for('home'))
 
+
 @app.route('/home')
 def home():
   return render_template('home.html')
+
+
 
 # Route to provide user with a mood based on their recently played tracks
 @app.route('/mood')
@@ -87,7 +104,7 @@ def top_artists():
     return f"Top Artists: {json.dumps(artist_names, indent=4)}"
 
 
-# Adding User Form page to website
+# Form to take in user's self description
 @app.route('/user_form', methods=['GET', 'POST'])
 def user_form():
     form = UserForm()
@@ -98,7 +115,8 @@ def user_form():
             'personality_traits': form.personality_traits.data,
             'fav_genre1': form.fav_genre1.data,
             'fav_genre2': form.fav_genre2.data,
-            'fav_genre3': form.fav_genre3.data
+            'fav_genre3': form.fav_genre3.data,
+            'include_history': form.include_history.data
             }
         return redirect(url_for('submit_page'))
     
@@ -106,40 +124,64 @@ def user_form():
 
 
 # For submission page, brings user here after they submit form
+# Displays playlist based on input
 @app.route('/submit_page')
 def submit_page():
+    
+    global recommended_songs_df  # Access the global DataFrame
+    
     # Retrieve user data from session
     user_data = session.get('user_data', None)
+    user_id = session.get('user_id')
     
     if user_data:
         star_sign = user_data.get('star_sign', 'Unknown')
         personality_traits = user_data.get('personality_traits', 'Unknown')
         fav_genre1 = user_data.get('fav_genre1', 'Unknown')
-        example1 = user_data.get('optional_field1', 'Unknown')
+        example1 = user_data.get('optional_field1', fav_genre1)
         fav_genre2 = user_data.get('fav_genre2', 'Unknown')
-        example2 = user_data.get('optional_field2', 'Unknown')
+        example2 = user_data.get('optional_field2', fav_genre2)
         fav_genre3 = user_data.get('fav_genre3', 'Unknown')
-        example3 = user_data.get('optional_field3', 'Unknown')
+        example3 = user_data.get('optional_field3', fav_genre3)
 
         history_prompt = user_data.get('include_history', 'Unknown')
+        print(history_prompt)
 
         if history_prompt=='yes':
-            pass
+            recent_tracks_data = spotify_client.get_recent_tracks()
+            tracks_artists = {
+                track['track']['name']: ', '.join([artist['name'] for artist in track['track']['artists']])
+                for track in recent_tracks_data['items']
+             }
+            tracks_artists_str = '. '.join([f"{track}: {artist}" for track, artist in tracks_artists.items()])
+
+            prompt = (
+                f"Give me a playlist of recommended songs based on my "
+                f"star sign: {star_sign}, "
+                f"personality traits: {personality_traits}, "
+                f"these genres: "
+                f"{fav_genre1} similar to {example1}, " 
+                f"{fav_genre2} similar to {example2}, "
+                f"{fav_genre3} similar to {example3}, "
+                f"and my listening history: "
+                f"{tracks_artists_str}. Don't give me songs from my listening history."
+                f"Please list each song on a new line, song title only in quotes. "
+                f"Format like: 'Song1'\n 'Song2'\n...'"
+                )        
         else:
-            pass
+            prompt = (
+                f"Give me a playlist of recommended songs based on my "
+                f"star sign: {star_sign}, "
+                f"personality traits: {personality_traits}, "
+                f"and my preference of these genres: "
+                f"{fav_genre1} similar to {example1}, " 
+                f"{fav_genre2} similar to {example2}, "
+                f"{fav_genre3} similar to {example3}. "
+                f"Please list each song on a new line, song title only in quotes. "
+                f"Format like: 'Song1'\n 'Song2'\n...'"
+                )
 
-        prompt = (
-            f"Give me a playlist of recommended songs based on my "
-            f"star sign: {star_sign}, "
-            f"personality traits: {personality_traits}, "
-            f"and my preference of these genres: "
-            f"{fav_genre1} similar to {example1}, " 
-            f"{fav_genre2} similar to {example2}, "
-            f"{fav_genre3} similar to {example3}. "
-            f"Please list each song on a new line, song title only in quotes. "
-            f"Format like: 'Song1'\n 'Song2'\n...'"
-            )
-
+        print(prompt)
         recommendations = openai_client.get_chat_response(prompt)
         song_list = spotify_client.extract_song_titles(recommendations)
 
@@ -152,6 +194,11 @@ def submit_page():
         for song in song_with_preview:
             song['link'] = spotify_client.get_song_link(song['track_id'])
 
+        # Add the recommendations to the DataFrame
+        new_rows = pd.DataFrame(song_with_preview)
+        new_rows['user_id'] = user_id
+        recommended_songs_df = pd.concat([recommended_songs_df, new_rows], ignore_index=True)
+
         return render_template('submit_page.html', 
                                title='Submitted Data', 
                                user_data = user_data, 
@@ -160,8 +207,20 @@ def submit_page():
     else:
         return redirect(url_for('user_form'))
 
-              
-@ app.route('/', methods=['GET', 'POST'])
+
+@app.route('/view_recommendations')
+def view_recommendations():
+    global recommended_songs_df
+    user_id = session.get('user_id')
+    
+    # Filter the DataFrame for the current user's recommendations
+    user_recommendations = recommended_songs_df[recommended_songs_df['user_id'] == user_id]
+    
+    return render_template('view_recommendation.html', recommendations=user_recommendations.to_dict(orient='records'))
+
+
+
+# Displays personal insight based on provided playlist 
 @app.route('/insights', methods=['GET', 'POST'])
 def insights():
     if request.method == 'POST':
@@ -193,7 +252,7 @@ def insights():
         return redirect(url_for('insights'))
     
     return render_template('insights.html')
-            
+
 
 if __name__ == '__main__': 
     app.run(debug=True, host="0.0.0.0", port=3000)
