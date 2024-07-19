@@ -1,39 +1,37 @@
-<!-- Layout File (Nav Bar for now Mostly)-->
+<!-- Layout File for Modules! (All but Home Page) -->
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- Required meta tags -->
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mood Mix</title>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mood Mix</title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Shrikhand&family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
+  <!-- CSS Style sheet -->
+  <link rel="stylesheet" type="text/css" href="/static/css/style.css">
 
-    <!-- CSS Style sheet-->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-    
-    <!-- <link rel="icon" href="./favicon.ico" type="image/x-icon"> -->
-     
+  <!-- <link rel="icon" href="./favicon.ico" type="image/x-icon"> -->
 </head>
-<body>
-  <nav>
-    <a id='webtitle' href="/home">Mood Mix</a>
 
-    <div class="features">
-      <a class="button" href="/">LOGIN</a>
-      <a class="button" href="/insights">INSIGHTS</a>
-      <a class="button" href="/user_form">FORM</a>
-      <a class="button" href="/mood">MOOD</a>
-    </div> 
-  </nav>
-  <div id = "body">
-    {% block content %}
-      <!-- All other pages content go here -->
-    {% endblock %}
+<body>
+  <div id="template">
+    <div id="page-header">
+      <a href="home.html"><h1>Mood Mix</h1></a>
+    </div>
+
+    <div id="menu-side">
+      {% include "nav_bar.html" %}
+    </div>
+    <div id="content-side">
+      {% block content %}
+      This is where module content would go!
+      {% endblock %}   
+    </div>
   </div>
 </body>
 </html>
