@@ -10,10 +10,15 @@ class UserForm(FlaskForm):
         render_kw={"placeholder": "Enter your astrology sign"}
     )
     personality_traits = TextAreaField(
-        'Personality Traits', validators=[
-            DataRequired()], render_kw={
-            "placeholder": f"Enter some personality traits!
-            ex. silly, mellow, creative, etc."})
+        'Personality Traits',
+        validators=[DataRequired()],
+        render_kw={
+            "placeholder": (
+                "Enter some personality traits!"
+                "ex. silly, mellow, creative, etc."
+            )
+        }
+    )
     fav_genre1 = StringField(
         'Favorite Genre 1',
         validators=[DataRequired()],

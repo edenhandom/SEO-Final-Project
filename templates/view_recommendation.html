@@ -6,7 +6,7 @@
     <h3>Your Recommended Songs</h3>
     <ul>
         {% for rec in recommendations %}
-            <li>{{ rec.song }} by {{ rec.artist }} - <a href="{{ rec.preview_url }}" target="_blank">Preview</a></li>
+            <li>{{ rec.song }} by <i>{{ rec.artist }}</i> - <a href="{{ rec.preview_url }}" target="_blank">Preview</a></li>
         {% endfor %}
     </ul>
 </main>

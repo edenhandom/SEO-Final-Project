@@ -174,14 +174,14 @@ class SpotifyClient:
                     track = tracks[0]
                     track_id = track['id']
                     preview_url = track.get('preview_url')
+
                     artist_name = [artist['name']
                                    for artist in track['artists']]
+                    if len(artist_name) > 1 and type(artist_name) is list:
+                        artist_name = ", ".join(artist_name)
+                    else:
+                        artist_name = artist_name[0]
 
                     return track_id, preview_url, artist_name
 
         return None, None, None
-
-        return render_template(
-            'mood.html',
-            top_tracks=tracks_artists,
-            response=tracks_artists_str)
