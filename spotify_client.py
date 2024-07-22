@@ -40,11 +40,18 @@ class SpotifyClient:
         response = requests.post(self.AUTH_URL, data=auth_token_data,
                                  headers=auth_token_headers)
         response_data = response.json()
-        token = response_data['access_token']
-        if not token:
-            return redirect(url_for('home'))
-        self.token = token
 
+        # In case of login errors
+        try:
+            token = response_data['access_token']
+            if not token:
+                return None
+            else:
+                self.token = token
+                return token
+        except: 
+            return None
+        
     # Used for general api access
     def connectSpotifyAPI(self):
         auth_response = requests.post(

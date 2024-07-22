@@ -241,7 +241,7 @@ p {
   gap: 1px;
 }
 
-#login-menu:first-child {
+.ipod-header {
   grid-area: header;
 }
 
@@ -258,4 +258,25 @@ p {
 
 #option2 {
   grid-area: option2;
+}
+
+/* IPOD SHOWING STATUS */
+
+/* Ipod as Status Screen */
+#status {
+  /* Screen Formating */
+  display: grid;
+  grid-template-areas:
+    "header"
+    "message";
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 6fr;
+  gap: 1px;
+}
+
+#message {
+  grid-area: message;
+  padding: 1px 6px;
+
+  text-align: left;
 }
