@@ -229,6 +229,7 @@ p {
   text-decoration: none;
 }
 
+<<<<<<< Updated upstream
 /********************* IPOD (LANDING PAGE LOGIN_MENU) *********************/
 
 /* Ipod as Welcome Screen */
@@ -402,4 +403,27 @@ option {
   background-color: #fff;
   color: #333;
   font-family: 'Courier New', Courier, monospace;
+=======
+/********************* add playlist function *********************/
+
+.add-playlist-container {
+  text-align: center; 
+  margin-top: 20px; 
+}
+
+.add-playlist-link {
+  font-size: 18px; 
+  color: #007bff; 
+  text-decoration: none; 
+  padding: 10px 20px; 
+  border: 2px solid #007bff; 
+  border-radius: 5px; 
+  display: inline-block; 
+  transition: background-color 0.3s, color 0.3s; 
+}
+
+.add-playlist-link:hover {
+  background-color: #007bff; 
+  color: white; 
+>>>>>>> Stashed changes
 }
