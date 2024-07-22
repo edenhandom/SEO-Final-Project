@@ -22,15 +22,13 @@ from openai_client import OpenAIClient
 Import our modules
 '''
 
-# Initialize a global DataFrame to store recommended songs
+# Initialize an empty DataFrame with the appropriate columns
 recommended_songs_df = pd.DataFrame(
-    columns=[
-        'song',
-        'artist',
-        'track_id',
-        'preview_url',
-        'user_id'])
-
+    columns=['song', 
+             'artist', 
+             'track_id', 
+             'preview_url', 
+             'user_id'])
 
 app = Flask(__name__)  # static_folder="static", static_url_path=""
 app.config['SECRET_KEY'] = os.urandom(64)   # generate random session key
@@ -216,6 +214,11 @@ def user_form():
             'fav_genre3': form.fav_genre3.data,
             'include_history': form.include_history.data
         }
+
+        # Set a unique user ID in the session (if not already set)
+        if 'user_id' not in session:
+            session['user_id'] = str(uuid.uuid4())
+
         return redirect(url_for('submit_page'))
 
     return render_template('user_form.html', title='Info', form=form)
@@ -309,6 +312,9 @@ def submit_page():
         recommended_songs_df = pd.concat(
             [recommended_songs_df, new_rows], ignore_index=True)
 
+        # Debug print to check DataFrame content
+        print("Updated DataFrame:\n", recommended_songs_df)
+
         return render_template('submit_page.html',
                                title='Submitted Data',
                                user_data=user_data,
@@ -321,17 +327,23 @@ def submit_page():
 @app.route('/view_recommendations')
 def view_recommendations():
     global recommended_songs_df
+
+    # Retrieve user data from session
+    user_data = session.get('user_data', None)
     user_id = session.get('user_id')
 
     # Filter the DataFrame for the current user's recommendations
     user_recommendations = recommended_songs_df[
         recommended_songs_df['user_id'] == user_id
     ]
+
+    # Debug print to check filtered DataFrame content
+    print("User Recommendations:\n", user_recommendations)
+
     return render_template(
         'view_recommendation.html',
-        recommendations=user_recommendations.to_dict(
-            orient='records'))
-
+        recommendations=user_recommendations.to_dict(orient='records')
+    )
 
 # Displays personal insight based on provided playlist
 @app.route('/insights', methods=['GET', 'POST'])

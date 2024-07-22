@@ -265,13 +265,21 @@ p {
 }
 
 
+
 /********************* USER FORM PAGE *********************/
 
 .user-form-h1 {
   color: #000000; 
   font-size: 1em;
   font-family: 'Courier New', Courier, monospace;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
 
+.big-break {
+  height: 150px; /* Adjust this value to control the size of the break */
+  width: 100%;
 }
 
 .personality-traits-textarea {
@@ -296,7 +304,6 @@ p {
   max-width: 800px;
   margin: 0 auto;
 }
-
 .formpaper {
   position: relative;
   font-size: 1em;
@@ -344,7 +351,6 @@ input[type="text"]::placeholder, textarea::placeholder {
   margin-bottom: 15px;
 }
 
-
 .left-side p {
   margin-bottom: 10px;
 }
@@ -370,10 +376,12 @@ input[type="text"]::placeholder, textarea::placeholder {
 }
 
 /* Style for the submit button */
-button[type="submit"] {
+button[type="submit"], button[type="button"]{
+  text-decoration: underline;
+  align: center;
   background-color: transparent;
   border: 1px solid transparent;
-  color: #000000;
+  color: #ABBBD2;
   padding: 10px 20px;
   font-size: 1em;
   font-family: 'Courier New', Courier, monospace;
@@ -383,6 +391,24 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   background-color: #eee;
+}
+
+button[type="button"]:hover {
+  background-color: #eee;
+}
+
+.center-button {
+  display: flex;
+  justify-content: center; /* Center the button horizontally */
+  align-items: center; /* Center the button vertically */
+}
+
+/* Additional class to style the button container */
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent; /* Ensure background is transparent */
 }
 
 /* Style for the select field */
@@ -402,7 +428,8 @@ option {
   background-color: #fff;
   color: #333;
   font-family: 'Courier New', Courier, monospace;
-/********************* add playlist function *********************/
+
+/********************* Add playlist function *********************/
 
 .add-playlist-container {
   text-align: center; 
@@ -424,25 +451,4 @@ option {
   background-color: #007bff; 
   color: white; 
 }
-/********************* add playlist function *********************/
 
-.add-playlist-container {
-  text-align: center; 
-  margin-top: 20px; 
-}
-
-.add-playlist-link {
-  font-size: 18px; 
-  color: #007bff; 
-  text-decoration: none; 
-  padding: 10px 20px; 
-  border: 2px solid #007bff; 
-  border-radius: 5px; 
-  display: inline-block; 
-  transition: background-color 0.3s, color 0.3s; 
-}
-
-.add-playlist-link:hover {
-  background-color: #007bff; 
-  color: white; 
-}
