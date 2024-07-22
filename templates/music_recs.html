@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block title %}Home - Spotify Playlist Recommendations{% endblock %}
+
+{% block content %}
+    <h2>Enter Your Playlist URL</h2>
+    <form action="/music_recs" method="post">
+        <label for="playlist_url">Playlist URL:</label>
+        <input type="text" id="playlist_url" name="playlist_url"><br><br>
+        <input type="submit" value="Get Recommendations">
+    </form>
+{% endblock %}
