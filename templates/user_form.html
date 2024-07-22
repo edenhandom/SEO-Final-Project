@@ -3,85 +3,113 @@
 {% block content %}
 <main class="container">
     <div class="left-side">
-        <h2 class="special-header"> Tell Us About Your... </h2>
+        <h1> Tell Us About You </h1>
         <br>
-        <br>
-        <br>
-        <h3> Star Sign ★ </h3>
-        <br>
-        <p>
+            Give us some insight into your personality, and we will curate a 
+            playlist that capture the essence of you.
+        
+            <div class="see-more-container">
+                <a href="#" id="see-more" onclick="toggleExplanations(event)">Tell me more...</a>
+            </div>
+
+        <div class="explanation" id="star-sign-explanation">
+            <h1> Star Sign </h1>
             Does your astrological sign influence your music preferences? 
-            Whether you're a creative Pisces or an energetic Aries, we explore the potential connections between your star sign and the music you love!
-        </p>
+            Whether you're a creative Pisces or an energetic Aries, we explore the potential 
+            connections between your star sign and the music you love!
+        </div>
         <br>
-        <h3>  Personality Traits ☺ </h3>
-        <br>
-        <p>
+
+        <div class="explanation" id="personality-traits-explanation">
+            <h1>  Personality Traits </h1>
             Are you an adventurous spirit craving new beats or a mellow soul who loves soothing melodies? 
-            Share a bit about your personality to help us tailor your musical profile to find music that resonates with you!
-        </p>
+            Share a bit about your personality to help us tailor your musical profile to find music 
+            that resonates with you!
+        </div>
         <br>
-        <h3> Favorite Genres ♬ </h3>
-        <br>
-        <p>
+
+        <div class="explanation" id="favorite-genres-explanation">
+            <h1> Favorite Genres </h1>
             What's a musical journey without knowing your favorite genres? 
-            Let us in on your top genre picks, and we'll reveal what they say about you.
-        </p>
+            Let us in on your top genre picks, and we'll introduce some new tunes that 
+            matches the vibe.
+        </div>
     </div>
 
-    <div class="form-container">
-        <h3 class="center">Enter Your Information </h3>
-        <br>
-        <!-- Display flashed messages -->
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
+    <br><br><br><br><br><br>
+
+    <div class="formpaper-container">
+        <div class="form-container formpaper">
+            <img src="static/images/clip.png" alt="Clip" class="clip-image">
+            <h3 class="user-form-h1">Playlist Generator Form </h3>
+            <br>
+            <!-- Display flashed messages -->
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
                     {% for message in messages %}
                         {{ message }}
                     {% endfor %}
-            {% endif %}
-        {% endwith %}
-        <form action="{{ url_for('user_form') }}" method="POST">
-            {{ form.hidden_tag() }}
-            
-            <br>
-            <div class="form-group">
-                {{ form.star_sign.label }}
-                {{ form.star_sign(size=32) }}
-            </div>
-            <br>
-            <div class="form-group">
-                {{ form.personality_traits.label }}
-                {{ form.personality_traits(rows=4, cols=50) }}
-            </div>
-            <br>
-            <div class="form-group">
-                {{ form.fav_genre1.label }}
-                {{ form.fav_genre1(size=32) }}
-                {{ form.optional_field1(size=32) }}
-
-            </div>
-            <br>
-            <div class="form-group">
-                {{ form.fav_genre2.label }}
-                {{ form.fav_genre2(size=32) }}
-                {{ form.optional_field2(size=32) }}
-            </div>
-            <br>
-            <div class="form-group">
-                {{ form.fav_genre3.label }}
-                {{ form.fav_genre3(size=32) }}
-                {{ form.optional_field3(size=32) }}
-
-            </div>
-            <br>
-            <div class="form-group">
+                {% endif %}
+            {% endwith %}
+            <form action="{{ url_for('user_form') }}" method="POST">
+                {{ form.hidden_tag() }}
+                
                 <br>
-                {{ form.include_history.label }}
-                {{ form.include_history() }}
-            </div>
-
-            <button type="submit">Submit</button>
-        </form>
+                <div class="form-group">
+                    {{ form.star_sign(size=32) }}
+                </div>
+                <br>
+                <div class="form-group">
+                    {{ form.personality_traits(class_='personality-traits-textarea', rows=4, cols=50) }}
+                </div>
+                <div class="form-group">
+                    {{ form.fav_genre1(size=32) }}
+                    {{ form.optional_field1(size=32) }}
+                </div>
+                <br>
+                <div class="form-group">
+                    {{ form.fav_genre2(size=32) }}
+                    {{ form.optional_field2(size=32) }}
+                </div>
+                <br>
+                <div class="form-group">
+                    {{ form.fav_genre3(size=32) }}
+                    {{ form.optional_field3(size=32) }}
+                </div>
+                <br>
+                <div class="form-group">
+                    <h1 class="user-form-h1">Include your listening history?</h1>
+                    <br>
+                    {{ form.include_history() }}
+                </div>
+                
+                <button type="submit">Submit</button>
+            </form>
+        </div>
     </div>
 </main>
+
+<script>
+    function toggleExplanations(event) {
+        event.preventDefault();
+        var explanations = document.querySelectorAll('.explanation');
+        explanations.forEach(function(explanation) {
+            if (explanation.style.display === 'none' || explanation.style.display === '') {
+                explanation.style.display = 'block';
+            } else {
+                explanation.style.display = 'none';
+            }
+        });
+        var seeMoreLink = document.getElementById('see-more');
+        seeMoreLink.innerText = seeMoreLink.innerText === 'Tell me more...' ? 'Tell me less!' : 'Tell me more...';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var explanations = document.querySelectorAll('.explanation');
+        explanations.forEach(function(explanation) {
+            explanation.style.display = 'none';
+        });
+    });
+</script>
+
 {% endblock %}
