@@ -76,6 +76,11 @@ class TestSongRec(unittest.TestCase):
 
 class UserFormTestCase(unittest.TestCase):
 
+    """
+    The same just add some more resppnse datas (3 extra fields)
+    No OOP
+    """
+
     def setUp(self):
         self.app = app
         self.app.config['TESTING'] = True
@@ -157,6 +162,11 @@ class TestChatGPTResponses(unittest.TestCase):
 
 
 class TestExtractSongTitles(unittest.TestCase):
+    "test spotify client"
+    """
+    Pick a few
+    public playlist -> gets a token
+    """
 
     from spotify_client import SpotifyClient
 
@@ -195,6 +205,12 @@ class TestExtractSongTitles(unittest.TestCase):
         expected = ['Crazy@Night', 'What?! No Way!', 'Yes, This & That']
         result = spotify_client.extract_song_titles(input_string)
         self.assertEqual(result, expected)
+
+
+"""
+Spotify Client - Systems test
+Insights - unittests
+"""
 
 
 if __name__ == '__main__':

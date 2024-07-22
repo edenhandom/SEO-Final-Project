@@ -151,6 +151,7 @@ def mood():
                     f"Format like: 'Song1'\n 'Song2'\n..."
                     )
 
+
                 raw_response = openai_client.get_chat_response(prompt)
                 song_list = spotify_client.extract_song_titles(raw_response)
 
@@ -255,6 +256,7 @@ def submit_page():
                 [f"{track}: "
                  f"{artist}" for track, artist
                  in tracks_artists.items()])
+
 
             prompt = (
                 f"Give me a playlist of recommended songs based on my "
