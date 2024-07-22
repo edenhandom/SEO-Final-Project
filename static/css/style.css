@@ -115,6 +115,10 @@ p {
   text-decoration: none;
   color: var(--ipod-text-color);
 }
+#page-header a:hover {
+  text-decoration: underline;
+  font-weight: 500;
+}
 
 /* The menu is fixed and un moving! */
 /* The menu sits in the middle of the div */
@@ -224,6 +228,7 @@ p {
   color: var(--ipod-text-color);
   text-decoration: none;
 }
+
 
 /********************* IPOD (LANDING PAGE LOGIN_MENU) *********************/
 
