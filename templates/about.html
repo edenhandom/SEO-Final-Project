@@ -1,4 +1,4 @@
-{% extends "foundation.html" %}
+{% extends "layout.html" %}
 
 {% block content %}  <!-- Edit into an IPod-->
 
@@ -44,18 +44,8 @@
                 </p>
             </div>
         </div>
-        <div class="image">
-            <a href="{{url_for('insights')}}"> <!--link to insights page--> 
-            <img src="{{url_for('static',filename='images/aura2.png')}}"  alt="aura circle for insights page">
-            <div class="text-overlay"> Playlist Insights </div>
-            </a>
-        </div>
-        <div class="image" style="margin-top: 60px;">
-            <a href="{{url_for('user_form')}}"> <!--link to horoscope page--> 
-            <img src="{{url_for('static',filename='images/aura3.png')}}" alt="aura circle for horoscope page">
-            <div class="text-overlay"> Musical Horoscope </div>
-            </a>
-        </div>
+        
+        
     </main>
 
 <!--
