@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}Get Playlist Insights{% endblock %}
+
+{% block content %}
+    <h2>Get Playlist Insights!</h2>
+    <p>
+        Ever wondered what your playlists say about you? Select your playlists
+        and get some insights into your musical preferences and personality!
+    </p>
+
+    <!-- Container for background image and button -->
+    <div class="image-container">
+        <img src="{{ url_for('static', filename='images/notepad.png') }}" alt="Background Image" class="background-image">
+        <button id="add-playlist-trigger" class="add-playlist-button">
+            <img src="{{ url_for('static', filename='images/add_playlist_button.png') }}" alt="Add Playlist Button">
+        </button>
+    </div>
+
+    <form action="{{ url_for('music_recs') }}" method="post">
+        <label for="playlist_url">Spotify Playlist URL:</label>
+        <input type="text" id="playlist_url" name="playlist_url" required>
+        <button type="submit">Get Insights</button>
+    </form>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+{% endblock %}

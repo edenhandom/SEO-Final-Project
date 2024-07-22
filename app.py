@@ -8,7 +8,8 @@ from flask import (Flask, request, redirect, session,
 from flask_session import Session
 from datetime import timedelta
 import pandas as pd
-
+import random
+from collections import Counter
 
 ''''
 Import our Classes
@@ -192,7 +193,7 @@ def clear_session():
 @app.route('/top-artists')
 def top_artists():
 
-    top_artists_data = SpotifyClient.get_top_artists()
+    top_artists_data = spotify_client.get_top_artists()
 
     artist_names = [artist['name'] for artist in top_artists_data['items']]
 
@@ -379,6 +380,108 @@ def insights():
         return redirect(url_for('insights'))
 
     return render_template('insights.html')
+
+@app.route('/music_recs', methods=['GET', 'POST'])
+def music_recs():
+    if request.method == 'POST':
+        playlist_url = request.form.get('playlist_url')
+        
+        if playlist_url:
+            try:
+                playlist_id = playlist_url.split('/playlist/')[1].split('?')[0]
+            except IndexError:
+                return "Invalid playlist URL.", 400
+            
+            # Get track features from playlist
+            track_features = spotify_client.get_playlist_tracks(playlist_id)
+            
+            print(track_features)
+            if track_features:
+                # Extract track IDs and popularities
+                track_ids = [track['track_id'] for track in track_features]
+                track_ids_str = ','.join(track_ids)
+                popularities = [track['popularity'] for track in track_features]
+
+                # Calculate average popularity
+                average_popularity = int(sum(popularities) / len(popularities)) if popularities else 0
+                
+                # Get audio features
+                audio_features = spotify_client.get_audio_features(','.join(track_ids))
+                
+                if not audio_features:
+                    return "Failed to get audio features.", 500
+                
+                # Aggregate audio features
+                aggregated_features = {
+                    'target_danceability': sum([feature['danceability'] for feature in audio_features if feature]) / len(audio_features),
+                    'target_energy': sum([feature['energy'] for feature in audio_features if feature]) / len(audio_features),
+                    'target_valence': sum([feature['valence'] for feature in audio_features if feature]) / len(audio_features),
+                    'target_acousticness': sum([feature['acousticness'] for feature in audio_features if feature]) / len(audio_features),
+                    'target_tempo': sum([feature['tempo'] for feature in audio_features if feature]) / len(audio_features),
+                    'target_popularity': int(average_popularity)
+                }
+                
+                # Count artists and genres
+                artist_ids = []
+                for track in track_features:
+                    artists_id = track['artist_id']
+                    for artist in artists_id:
+                        artist_id = artist['id']
+                        artist_ids.append(artist_id)
+                '''
+                - for each track in track features, access artists key
+                - for each artist in the artists list, access id
+                - append that to artist_ids list
+                '''
+                # print("ids", artist_ids)
+                artist_count = Counter(artist_ids)
+                # print(artist_count)
+                ''' genre_counter = Counter(
+                    genre 
+                    for track in track_features 
+                    for artist in track['artists'] 
+                    for genre in artist.get('genres', [])
+                )            
+                   '''  
+                seed_artists = [artist for artist, _ in artist_count.most_common(2)]
+                print(seed_artists)
+                # seed_genres = [genre for genre, _ in genre_counter.most_common(5)]
+                seed_tracks = random.sample(track_ids, min(3, len(track_ids)))
+                print(seed_tracks)
+                # Get recommendations
+                try: 
+                    recommendations_response = spotify_client.get_recommendations(
+                        limit=20,
+                        seed_artists=seed_artists,
+                        seed_tracks=seed_tracks,
+                        # seed_genres=seed_genres,
+                        target_danceability=aggregated_features['target_danceability'],
+                        target_energy=aggregated_features['target_energy'],
+                        target_valence=aggregated_features['target_valence'],
+                        target_acousticness=aggregated_features['target_acousticness'],
+                        target_tempo=aggregated_features['target_tempo'],
+                        target_popularity=average_popularity
+                    )
+                except:
+                    print("Error with recommendations")
+
+                if recommendations_response and 'tracks' in recommendations_response:
+                    recommendations = [
+                        {
+                            'song': track['name'], 
+                            'artist': ', '.join(artist['name'] for artist in track['artists'])
+                        } 
+                        for track in recommendations_response['tracks']
+                    ]
+                else:
+                    recommendations = []
+                    
+                return render_template('view_music_recs.html', recommendations=recommendations)
+            
+            else:
+                return "Failed to get track features or no tracks found in the playlist.", 400
+        
+    return render_template('music_recs.html')
 
 
 if __name__ == '__main__':
