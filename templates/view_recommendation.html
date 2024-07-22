@@ -4,50 +4,46 @@
 {% block content %}
 <main class="container">
     <h3>Your Recommended Songs</h3>
-    <table>
+    <br>
+    <table class="rec-db">
         {% for song in recommendations %}
-
         <tr class="song">
-            
             <td>
                 <!-- Song Title -->
                 <a class="bold" href="{{ song.link }}" target="_blank">{{ song.song }}</a>
                 <br>
                 <!-- Song Artist-->
-                <i> {{ song.artist }} </i>
+                <i>{{ song.artist }}</i>
             </td>
-
             <!-- Song Preview -->
             <td>
                 {% if song.preview_url %}
-                    <div class="audio-container">
-                        <button class="audio-button mono-font" onclick="togglePlay(this)">▶</button>
-                        <audio preload="none">
-                            <source src="{{ song.preview_url }}" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
-                        <span class="audio-time mono-font">0:00</span>
-                    </div>
-                    <!-- <a class="button" href="{{ song. preview_url }}" target="_blank">Preview</a>
-                    
-                    <iframe src="https://open.spotify.com/embed/track/{{ song.preview_url.split('/')[-1] }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-                    -->
+                <div class="audio-container">
+                    <button class="audio-button mono-font" onclick="togglePlay(this)">▶</button>
+                    <audio preload="none">
+                        <source src="{{ song.preview_url }}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <span class="audio-time mono-font">0:00</span>
+                </div>
                 {% else %}
-                    No preview available
+                No preview available
                 {% endif %}
                 <br>
             </td>
         </tr>
         {% endfor %}
     </table>
+
+    <div class="button-container">  
+        <a class="button" href="{{ url_for('user_form') }}">Get New Insights</a>
+        <a class="button" href="{{ url_for('home') }}">Home</a>
+    </div>
 </main>
 
-
-<!-- Script for the way the play preview buttons look -->
+<!-- Script for the play preview buttons -->
 <script>
     function togglePlay(button) {
-
-        // Play Pause button
         var audio = button.nextElementSibling;
         var audioTime = button.nextElementSibling.nextElementSibling;
         if (audio.paused) {
@@ -57,8 +53,6 @@
             audio.pause();
             button.textContent = '▶';
         }
-
-        // Timer
         audio.addEventListener('timeupdate', function() {
             var minutes = Math.floor(audio.currentTime / 60);
             var seconds = Math.floor(audio.currentTime % 60);
@@ -68,6 +62,5 @@
             audioTime.textContent = minutes + ':' + seconds;
         });
     }
-    </script>
-
+</script>
 {% endblock %}

@@ -87,12 +87,15 @@
 
                 <div class="form-group">
                     <h3 class="user-form-h1">Include your listening history?</h3>
+                    <br>
                     {{ form.include_history() }}
                 </div>
 
                 <div class="form-group button-container">
                     <button type="submit">Get my songs!</button>
                     <button type="button" onclick="clearForm()">Clear Form</button>
+                    <a class="button" href="{{ url_for('view_recommendations') }}">View Recommended Songs</a>
+
                 </div>
             </form>
         </div>
