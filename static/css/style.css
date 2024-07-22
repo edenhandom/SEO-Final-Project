@@ -263,3 +263,143 @@ p {
 #option2 {
   grid-area: option2;
 }
+
+
+/********************* USER FORM PAGE *********************/
+
+.user-form-h1 {
+  color: #000000; 
+  font-size: 1em;
+  font-family: 'Courier New', Courier, monospace;
+
+}
+
+.personality-traits-textarea {
+  width: 80%; 
+  max-width: 600px; 
+  min-width: 300px; 
+}
+
+.clip-image {
+  position: absolute;
+  top: -120px; /* Adjust this value to control how much the clip overlaps */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px; /* Adjust this value based on the size of your clip image */
+  height: auto;
+  z-index: 10; /* Ensure the clip is above other elements */
+}
+
+.formpaper-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.formpaper {
+  position: relative;
+  font-size: 1em;
+  padding: 5vw;
+  box-shadow: 5px 5px #63598596;
+  border-radius: 10px;
+  z-index: 1;
+}
+
+.formpaper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../images/paper.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+/* Ensure input fields are responsive */
+input[type="text"], textarea {
+  background-color: transparent;
+  border: 1px solid transparent; /* Transparent border */
+  color: #333;
+  padding: 10px;
+  font-size: 1em;
+  font-family: 'Courier New', Courier, monospace;
+  width: 100%; /* Make the input fields take the full width of their container */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+input[type="text"]::placeholder, textarea::placeholder {
+  color: #000000;
+  font-size: 1em;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* Ensure form-group adjusts properly */
+.form-group {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+
+.left-side p {
+  margin-bottom: 10px;
+}
+
+.see-more-container {
+  margin-top: 10px;
+}
+
+.explanation {
+  display: none;
+  margin-top: 10px;
+}
+
+/* Additional styles for the explanations when shown */
+.explanation h1 {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.explanation p {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+/* Style for the submit button */
+button[type="submit"] {
+  background-color: transparent;
+  border: 1px solid transparent;
+  color: #000000;
+  padding: 10px 20px;
+  font-size: 1em;
+  font-family: 'Courier New', Courier, monospace;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #eee;
+}
+
+/* Style for the select field */
+select {
+  background-color: transparent;
+  border: 1px solid #FFFBFB;
+  color: #000000;
+  padding: 10px;
+  font-size: 1em;
+  font-family: 'Courier New', Courier, monospace;
+  width: 100%;
+  box-sizing: border-box;
+  appearance: none; /* Remove default dropdown arrow for styling */
+}
+
+option {
+  background-color: #fff;
+  color: #333;
+  font-family: 'Courier New', Courier, monospace;
+}

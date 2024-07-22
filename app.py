@@ -140,15 +140,17 @@ def mood():
             user_mood = request.form.get('user_mood')
             if user_mood:
                 prompt = (
-                    f"Give me a playlist of songs"
+                    f"Give me a playlist of songs "
                     f"that match the mood '{user_mood}'. "
-                    f"Here are some of my favorite"
+                    f"Here are some of my favorite "
                     f"recent songs: {tracks_artists_str}. "
-                    f"Do not give me any songs"
+                    f"Do not give me any songs "
                     f"from my recent songs."
-                    f"Please list each song on a"
+                    f"Please list each song on a "
                     f"new line, song title only in quotes. "
-                    f"Format like: 'Song1'\n 'Song2'\n...")
+                    f"Format like: 'Song1'\n 'Song2'\n..."
+                    )
+
 
                 raw_response = openai_client.get_chat_response(prompt)
                 song_list = spotify_client.extract_song_titles(raw_response)
@@ -251,11 +253,10 @@ def submit_page():
                 for track in recent_tracks_data['items']
             }
             tracks_artists_str = '. '.join(
-                [
-                    f"{track}:{artist}"
-                    for track, artist in tracks_artists.items()
-                ]
-            )
+                [f"{track}: "
+                 f"{artist}" for track, artist
+                 in tracks_artists.items()])
+
 
             prompt = (
                 f"Give me a playlist of recommended songs based on my "
