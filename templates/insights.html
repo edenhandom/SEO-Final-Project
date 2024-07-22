@@ -3,6 +3,19 @@
 {% block title %}Get Playlist Insights{% endblock %}
 
 {% block content %}
+    <h2> Get Playlist Insights!</h2>
+    <p>
+        Ever wondered what your playlists say about you? Select your playlists
+        and get some insights into your musical preferences and personality!
+    </p>
+    <br>
+    <br>
+    <div class="image-container">
+        <img src ="{{url_for('static', filename='images/notepad.png')}}" alt = "Notepad">
+    </div>
+    <div class="add-playlist-container">
+        <a href="#" id="add-playlist-trigger" class="add-playlist-link">+ add playlist</a>
+    </div>
     <h2>Get Playlist Insights</h2>
     <form action="{{ url_for('insights') }}" method="post">
         <label for="playlist_url">Spotify Playlist URL:</label>

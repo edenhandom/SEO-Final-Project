@@ -222,8 +222,8 @@ p {
   padding-bottom: calc(var(--ipod-height) / 90);
   margin-bottom: calc(var(--ipod-height) / 150);
   font-size: var(--ipod-text-size);
- }
- 
+ } 
+
 .ipod-header a {
   color: var(--ipod-text-color);
   text-decoration: none;
@@ -436,6 +436,28 @@ option {
   background-color: #fff;
   color: #333;
   font-family: 'Courier New', Courier, monospace;
+
+/********************* Add playlist function *********************/
+
+.add-playlist-container {
+  text-align: center; 
+  margin-top: 20px; 
+}
+
+.add-playlist-link {
+  font-size: 18px; 
+  color: #007bff; 
+  text-decoration: none; 
+  padding: 10px 20px; 
+  border: 2px solid #007bff; 
+  border-radius: 5px; 
+  display: inline-block; 
+  transition: background-color 0.3s, color 0.3s; 
+}
+
+.add-playlist-link:hover {
+  background-color: #007bff; 
+  color: white; 
 }
 
 /********************* SUBMIT FORM PAGE *********************/
