@@ -115,6 +115,10 @@ p {
   text-decoration: none;
   color: var(--ipod-text-color);
 }
+#page-header a:hover {
+  text-decoration: underline;
+  font-weight: 500;
+}
 
 /* The menu is fixed and un moving! */
 /* The menu sits in the middle of the div */
@@ -137,7 +141,7 @@ p {
   grid-area: content;
 
   /* Making content scroll-able*/
-  padding: 10vh 15vw 10vh 1rem;
+  padding: 4vh 15vw 10vh 1rem;
   overflow-y: auto;
 }
 

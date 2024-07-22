@@ -1,0 +1,9 @@
+<!-- FOR WHEN THE IPOD SHOWS PAGE STATUS (Errors, Loading etc)-->
+{% extends "ipod.html" %}
+{% block content %}
+<div class="screen" id="status">
+  <div class="ipod-header"><a href="home">Mood Mix</a></div>
+  <div class="text" id ="message">{{ text|safe }}</div>
+</div>
+
+{% endblock %}

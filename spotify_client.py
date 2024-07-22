@@ -22,7 +22,7 @@ class SpotifyClient:
             f"&scope={self.scope}"
             f"&redirect_uri={self.redirect_uri}"
             "&show_dialog=True"
-            )
+        )
 
     # Used for user authentication
 
@@ -94,7 +94,7 @@ class SpotifyClient:
             print("Failed to retrieve recent tracks")
             print("Status Code: ", response.status_code)
             return None
-        
+
     def get_top_artists(self):
         top_artists_url = f"{self.BASE_URL}me/top/artists"
         response = requests.get(top_artists_url, headers=self.get_headers())
@@ -127,7 +127,8 @@ class SpotifyClient:
 
                 tracks_artists = {
                     track['track']['name']: ', '.join(
-                        [artist['name'] for artist in track['track']['artists']]
+                        [artist['name'] for
+                         artist in track['track']['artists']]
                     )
                     for track in playlist_data['tracks']['items']
                 }
@@ -173,12 +174,14 @@ class SpotifyClient:
                     track = tracks[0]
                     track_id = track['id']
                     preview_url = track.get('preview_url')
-                    artist_name = [artist['name'] for artist in track['artists']]
+                    artist_name = [artist['name']
+                                   for artist in track['artists']]
 
                     return track_id, preview_url, artist_name
 
         return None, None, None
 
-
-        return render_template('mood.html', top_tracks=tracks_artists, response=tracks_artists_str)
-      
+        return render_template(
+            'mood.html',
+            top_tracks=tracks_artists,
+            response=tracks_artists_str)

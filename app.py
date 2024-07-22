@@ -1,8 +1,9 @@
+from user_form import UserForm
 import os
 import json
 import uuid
 import requests
-from flask import (Flask, request, redirect, session, 
+from flask import (Flask, request, redirect, session,
                    url_for, render_template, flash, make_response)
 from flask_session import Session
 from datetime import timedelta
@@ -19,17 +20,23 @@ from openai_client import OpenAIClient
 '''
 Import our modules
 '''
-from user_form import UserForm
 
 # Initialize a global DataFrame to store recommended songs
-recommended_songs_df = pd.DataFrame(columns=['song', 'artist', 'track_id', 'preview_url', 'user_id'])
+recommended_songs_df = pd.DataFrame(
+    columns=[
+        'song',
+        'artist',
+        'track_id',
+        'preview_url',
+        'user_id'])
 
 
-app = Flask(__name__) # static_folder="static", static_url_path=""
+app = Flask(__name__)  # static_folder="static", static_url_path=""
 app.config['SECRET_KEY'] = os.urandom(64)   # generate random session key
 # Configure session to use filesystem (server-side session storage)
 app.config['SESSION_TYPE'] = 'filesystem'
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)  # Set session lifetime to 7 days
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(
+    days=7)  # Set session lifetime to 7 days
 Session(app)
 
 CLIENT_ID = os.environ.get("CLIENT_ID")
@@ -46,6 +53,8 @@ openai_client = OpenAIClient(USER_KEY)
 user_session = UserSession()
 
 # First page that User sees. A login page
+
+
 @app.route('/')
 def login_page():
     return render_template('login_page.html')
@@ -59,6 +68,8 @@ def login():
     return redirect(spotify_client.get_auth_url())
 
 # Callback route to handle the redirect from Spotify
+
+
 @app.route('/callback')
 def callback():
     code = request.args.get('code')
@@ -69,8 +80,12 @@ def callback():
 
 @app.route('/home')
 def home():
-  return render_template('home.html')
+    return render_template('home.html')
 
+
+@app.route('/about_us')
+def about_us():
+    return render_template('about.html')
 
 
 # Route to provide user with a mood based on their recently played tracks
@@ -78,11 +93,14 @@ def home():
 def mood():
     recent_tracks_data = spotify_client.get_recent_tracks()
     tracks_artists = {
-            track['track']['name']: ', '.join([artist['name'] for artist in track['track']['artists']])
-            for track in recent_tracks_data['items']
-        }
-    tracks_artists_str = '. '.join([f"{track}: {artist}" for track, artist in tracks_artists.items()])
-    
+        track['track']['name']: ', '.join([artist['name'] for
+                                           artist in
+                                           track['track']['artists']])
+        for track in recent_tracks_data['items']
+    }
+    tracks_artists_str = '. '.join(
+        [f"{track}: {artist}" for track, artist in tracks_artists.items()])
+
     action = None
     response = None
     user_mood = None
@@ -90,57 +108,78 @@ def mood():
 
     if request.method == 'POST':
         action = request.form.get('action')
-        
+
         if action == 'request_mood':
             prompt = (
-                    f"Give me a mood (an emotion) " 
-                    f"based on my favorite recent songs: "
-                    f"{tracks_artists_str}. "
-                    f"Please give me a one or two word mood."
-                    )
+                f"Give me a mood (an emotion) "
+                f"based on my favorite recent songs: "
+                f"{tracks_artists_str}. "
+                f"Please give me a one or two word mood."
+            )
             mood_response = openai_client.get_chat_response(prompt)
-            
+
             # Transform recent tracks into the same format as the playlist
             song_with_preview = []
             for track in recent_tracks_data['items']:
                 track_id = track['track']['id']
                 song = track['track']['name']
-                artist = ', '.join([artist['name'] for artist in track['track']['artists']])
+                artist = ', '.join([artist['name']
+                                   for artist in track['track']['artists']])
                 preview_url = track['track']['preview_url']
-                song_with_preview.append({'song': song, 'artist': artist, 'track_id': track_id, 'preview_url': preview_url})
-            
+                song_with_preview.append({'song': song,
+                                          'artist': artist,
+                                          'track_id': track_id,
+                                          'preview_url': preview_url})
+
             for song in song_with_preview:
                 song['link'] = spotify_client.get_song_link(song['track_id'])
 
             response = song_with_preview
 
-        
         elif action == 'submit_mood':
             user_mood = request.form.get('user_mood')
             if user_mood:
                 prompt = (
-                    f"Give me a playlist of songs that match the mood '{user_mood}'. "
-                    f"Here are some of my favorite recent songs: {tracks_artists_str}. "
-                    f"Do not give me any songs from my recent songs."
-                    f"Please list each song on a new line, song title only in quotes. "
-                    f"Format like: 'Song1'\n 'Song2'\n..."
-                )
+                    f"Give me a playlist of songs
+                    that match the mood '{user_mood}'. "
+                    f"Here are some of my favorite
+                    recent songs: {tracks_artists_str}. "
+                    f"Do not give me any songs
+                    from my recent songs."
+                    f"Please list each song on a
+                    new line, song title only in quotes. "
+                    f"Format like: 'Song1'\n 'Song2'\n...")
 
                 raw_response = openai_client.get_chat_response(prompt)
                 song_list = spotify_client.extract_song_titles(raw_response)
-                
-                song_with_preview = []
-                for song in song_list:
-                    track_id, preview_url, artist_name = spotify_client.get_song_data(song)
-                    if track_id and preview_url and artist_name:
-                        song_with_preview.append({'song': song, 'artist': artist_name, 'track_id': track_id, 'preview_url': preview_url})
 
+                song_with_preview = []
+
+                for song in song_list:
+                    track_id,
+                    preview_url,
+                    artist_name = spotify_client.get_song_data(song)
+                    if track_id and preview_url and artist_name:
+                        song_with_preview.append({
+                            'song': song,
+                            'artist': artist_name,
+                            'track_id': track_id,
+                            'preview_url': preview_url
+                        })
                 for song in song_with_preview:
-                    song['link'] = spotify_client.get_song_link(song['track_id'])
+                    song['link'] = spotify_client.get_song_link(
+                        song['track_id'])
 
                 response = song_with_preview
 
-    return render_template('mood.html', top_tracks=tracks_artists, response=response, action=action, user_mood=user_mood, mood_response=mood_response)
+    return render_template(
+        'mood.html',
+        top_tracks=tracks_artists,
+        response=response,
+        action=action,
+        user_mood=user_mood,
+        mood_response=mood_response)
+
 
 @app.route('/clear-session')
 def clear_session():
@@ -173,9 +212,9 @@ def user_form():
             'fav_genre2': form.fav_genre2.data,
             'fav_genre3': form.fav_genre3.data,
             'include_history': form.include_history.data
-            }
+        }
         return redirect(url_for('submit_page'))
-    
+
     return render_template('user_form.html', title='Info', form=form)
 
 
@@ -183,13 +222,13 @@ def user_form():
 # Displays playlist based on input
 @app.route('/submit_page')
 def submit_page():
-    
+
     global recommended_songs_df  # Access the global DataFrame
-    
+
     # Retrieve user data from session
     user_data = session.get('user_data', None)
     user_id = session.get('user_id')
-    
+
     if user_data:
         star_sign = user_data.get('star_sign', 'Unknown')
         personality_traits = user_data.get('personality_traits', 'Unknown')
@@ -203,39 +242,45 @@ def submit_page():
         history_prompt = user_data.get('include_history', 'Unknown')
         print(history_prompt)
 
-        if history_prompt=='yes':
+        if history_prompt == 'yes':
             recent_tracks_data = spotify_client.get_recent_tracks()
             tracks_artists = {
-                track['track']['name']: ', '.join([artist['name'] for artist in track['track']['artists']])
+                track['track']['name']:
+                ', '.join([artist['name']
+                           for artist in track['track']['artists']])
                 for track in recent_tracks_data['items']
-             }
-            tracks_artists_str = '. '.join([f"{track}: {artist}" for track, artist in tracks_artists.items()])
+            }
+            tracks_artists_str = '. '.join(
+                [f"{track}:
+                 {artist}" for track, artist
+                 in tracks_artists.items()])
 
             prompt = (
                 f"Give me a playlist of recommended songs based on my "
                 f"star sign: {star_sign}, "
                 f"personality traits: {personality_traits}, "
                 f"these genres: "
-                f"{fav_genre1} similar to {example1}, " 
+                f"{fav_genre1} similar to {example1}, "
                 f"{fav_genre2} similar to {example2}, "
                 f"{fav_genre3} similar to {example3}, "
                 f"and my listening history: "
-                f"{tracks_artists_str}. Don't give me songs from my listening history."
-                f"Please list each song on a new line, song title only in quotes. "
-                f"Format like: 'Song1'\n 'Song2'\n...'"
-                )        
+                f"{tracks_artists_str}. Don't give me "
+                f"songs from my listening history."
+                f"Please list each song on a new line, "
+                f"song title only in quotes. "
+                f"Format like: 'Song1'\n 'Song2'\n...'")
         else:
             prompt = (
                 f"Give me a playlist of recommended songs based on my "
                 f"star sign: {star_sign}, "
                 f"personality traits: {personality_traits}, "
                 f"and my preference of these genres: "
-                f"{fav_genre1} similar to {example1}, " 
+                f"{fav_genre1} similar to {example1}, "
                 f"{fav_genre2} similar to {example2}, "
                 f"{fav_genre3} similar to {example3}. "
-                f"Please list each song on a new line, song title only in quotes. "
-                f"Format like: 'Song1'\n 'Song2'\n...'"
-                )
+                f"Please list each song on a new line, "
+                f"song title only in quotes. "
+                f"Format like: 'Song1'\n 'Song2'\n...'")
 
         print(prompt)
         recommendations = openai_client.get_chat_response(prompt)
@@ -243,9 +288,13 @@ def submit_page():
 
         song_with_preview = []
         for song in song_list:
-            track_id, preview_url, artist_name = spotify_client.get_song_data(song)
+            track_id, preview_url, artist_name = spotify_client.get_song_data(
+                song)
             if track_id and preview_url and artist_name:
-               song_with_preview.append({'song': song, 'artist': artist_name, 'track_id': track_id, 'preview_url': preview_url})
+                song_with_preview.append({'song': song,
+                                          'artist': artist_name,
+                                          'track_id': track_id,
+                                          'preview_url': preview_url})
 
         for song in song_with_preview:
             song['link'] = spotify_client.get_song_link(song['track_id'])
@@ -253,12 +302,13 @@ def submit_page():
         # Add the recommendations to the DataFrame
         new_rows = pd.DataFrame(song_with_preview)
         new_rows['user_id'] = user_id
-        recommended_songs_df = pd.concat([recommended_songs_df, new_rows], ignore_index=True)
+        recommended_songs_df = pd.concat(
+            [recommended_songs_df, new_rows], ignore_index=True)
 
-        return render_template('submit_page.html', 
-                               title='Submitted Data', 
-                               user_data = user_data, 
-                               recommendations = song_with_preview
+        return render_template('submit_page.html',
+                               title='Submitted Data',
+                               user_data=user_data,
+                               recommendations=song_with_preview
                                )
     else:
         return redirect(url_for('user_form'))
@@ -268,28 +318,34 @@ def submit_page():
 def view_recommendations():
     global recommended_songs_df
     user_id = session.get('user_id')
-    
+
     # Filter the DataFrame for the current user's recommendations
-    user_recommendations = recommended_songs_df[recommended_songs_df['user_id'] == user_id]
-    
-    return render_template('view_recommendation.html', recommendations=user_recommendations.to_dict(orient='records'))
+    user_recommendations = recommended_songs_df[
+        recommended_songs_df['user_id'] == user_id
+    ]
+    return render_template(
+        'view_recommendation.html',
+        recommendations=user_recommendations.to_dict(
+            orient='records'))
 
 
-
-# Displays personal insight based on provided playlist 
+# Displays personal insight based on provided playlist
 @app.route('/insights', methods=['GET', 'POST'])
 def insights():
     if request.method == 'POST':
         print("Form submitted")
         playlist_url = request.form.get('playlist_url')
         print(f"Received playlist URL: {playlist_url}")
-        
+
         if playlist_url:
-            track_artist = spotify_client.get_public_playlist_data(playlist_url)
-            
+            track_artist = spotify_client.get_public_playlist_data(
+                playlist_url)
+
             if track_artist:
-                tracks_artists_str = '. '.join([f"{track}: {artist}" for track, artist in track_artist.items()])
-                
+                tracks_artists_str = '. '.join(
+                    [f"{track}: {artist}"
+                     for track, artist in track_artist.items()])
+
                 prompt = (f'Here is my playlist: {tracks_artists_str}. '
                           f'I want to know what these songs say about my: '
                           f'1. Musical preferences,'
@@ -297,18 +353,18 @@ def insights():
                           f'3. Personality. '
                           f'Be concise and format with line breaks between '
                           f'each insight.')
-                
+
                 chat_response = openai_client.get_chat_response(prompt)
                 chat_response = chat_response.replace('\n', '<br>')
 
+                return render_template(
+                    'result.html', chat_response=chat_response)
 
-                return render_template('result.html', chat_response=chat_response)
-        
         flash("Please enter a valid playlist URL.")
         return redirect(url_for('insights'))
-    
+
     return render_template('insights.html')
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=3000)

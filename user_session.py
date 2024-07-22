@@ -9,6 +9,6 @@ class UserSession:
 
     def get_token(self):
         return self.data.get('token')
-    
+
     def clear(self):
-      self.data.clear()
+        self.data.clear()
