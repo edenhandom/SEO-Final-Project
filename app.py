@@ -66,11 +66,13 @@ def callback():
     user_session.set_token(spotify_client.token)
     return redirect(url_for('home'))
 
-
 @app.route('/home')
 def home():
   return render_template('home.html')
 
+@app.route('/about_us')
+def about_us():
+  return render_template('about.html')
 
 
 # Route to provide user with a mood based on their recently played tracks
