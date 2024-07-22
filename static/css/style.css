@@ -183,12 +183,14 @@ p {
 }
 
 /* Menu Items */
-#menu div:not(:first-child) :hover {
+
+.menu-item a:hover {
   background-color: var(--ipod-text-color);
   color: var(--screen-color);
 }
 
-#menu div:not(:first-child) a {
+.menu-item a {
+  height: calc(var(--screen-height) / 8);
   color: var(--ipod-text-color);
   text-decoration: none;
 
@@ -199,18 +201,18 @@ p {
   padding: 1px 6px;
 }
 
-#menu h6 {
+.menu-item h6 {
   font-size: var(--ipod-text-size);
   font-weight: normal;
 }
 
-#menu p {
+.menu-item p {
   font-size: 10px;
   font-weight: bold;
 }
 
 /* Menu Header */
-#menu div:first-child {
+.ipod-header {
   text-align: center;
   border-bottom: var(--ipod-text-color) solid calc(var(--ipod-height) / 150);
   padding-bottom: calc(var(--ipod-height) / 90);
@@ -218,7 +220,42 @@ p {
   font-size: var(--ipod-text-size);
  }
  
-#menu div:first-child a {
+.ipod-header a {
   color: var(--ipod-text-color);
   text-decoration: none;
+}
+
+/********************* IPOD (LANDING PAGE LOGIN_MENU) *********************/
+
+/* Ipod as Welcome Screen */
+#login-menu {
+  /* Screen Formating */
+  display: grid;
+  grid-template-areas:
+    "header"
+    "text"
+    "option1"
+    "option2";
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 4fr 1fr 1fr;
+  gap: 1px;
+}
+
+#login-menu:first-child {
+  grid-area: header;
+}
+
+#text {
+  grid-area: text;
+  padding: 1px 6px;
+
+  text-align: left;
+}
+
+#option1 {
+  grid-area: option1;
+}
+
+#option2 {
+  grid-area: option2;
 }

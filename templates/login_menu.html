@@ -1,12 +1,52 @@
 <!-- IPOD LOGIN MENU -->
 {% extends "ipod.html" %}
 {% block content %}
+<html>
 <div class="screen" id="login-menu">
-  <div><a>Mood Mix</a></div>
+  <div class="ipod-header"><a>Mood Mix</a></div>
   <div id="text">
-    <p>Hello</p>
-    </div>
-  <div><a id="option1"><p>next</p></a></div>
-  <div><a id="option2" href="/login"><p>login</p></a></div>
+    <p id="text-content">Welcome to Mood Mix!</p>
+  </div>
+  <div class="menu-item"><a id="option1" onclick="updateText('option1')">Next<p>&gt;</p></a></div>
+  <div class="menu-item"><a id="option2" href="/login" onclick="updateText('option2')">Skip to Login<p>&gt;</p></a></div>
 </div>
+</html>
+
+<script>
+  let slideNum = 0
+  // Function to update text based on which option is clicked
+  function updateText(option) {
+    slideNum+=1
+    var textBox = document.getElementById("text-content");
+
+    console.log(slideNum)
+
+    if (option === "option1") {
+      if (slideNum == 0) {
+        // reset ipod
+        textBox.innerHTML = "Welcome to Mood Mix!"
+
+        document.getElementById("option1").innerHTML = "Next <p>&gt;</p>";
+        document.getElementById("option2").innerHTML = "Skip to Login <p>&gt;</p>"
+      }
+      
+      if (slideNum == 1) {
+        textBox.innerHTML = "We believe your music taste and personality are deeply intertwined!";
+
+      }
+      if (slideNum == 2) {
+        textBox.innerHTML = "Login to get started!";
+
+        // update buttons
+        document.getElementById("option1").innerHTML = "Go Back <p>&gt;</p>";
+        document.getElementById("option2").innerHTML = "Login <p>&gt;</p>"
+        slideNum = -1;
+      }
+
+    } else if (option === "option2") {
+      textBox.innerHTML = "Redirecting to Login ...";
+    }
+
+  }
+</script>
 {% endblock %}
