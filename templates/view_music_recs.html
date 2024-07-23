@@ -3,10 +3,62 @@
 {% block content %}
 <main class="container">
     <h3>Your Recommended Songs</h3>
-    <ul>
-        {% for rec in recommendations %}
-            <li>{{ rec.song }} by <i>{{ rec.artist }}</i> - <a href="{{ rec.preview_url }}" target="_blank">Preview</a></li>
+    <table>
+        {% for song in recommendations %}
+        <tr class="song">
+            <td>
+                <!-- Song Title -->
+                <a class="bold" href="{{ song.link }}" target="_blank">{{ song.song }}</a>
+                <br>
+                <!-- Song Artist -->
+                <i>{{ song.artist }}</i>
+            </td>
+            <!-- Song Preview -->
+            <td>
+                {% if song.preview_url %}
+                <div class="audio-container">
+                    <button class="audio-button mono-font" onclick="togglePlay(this)">▶</button>
+                    <audio preload="none">
+                        <source src="{{ song.preview_url }}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <span class="audio-time mono-font">0:00</span>
+                </div>
+                {% else %}
+                No preview available
+                {% endif %}
+                <br>
+            </td>
+        </tr>
         {% endfor %}
-    </ul>
+    </table>
+
+    <div class="return-buttons">
+        <a class="button" href="{{ url_for('home') }}">Return Home</a>
+        <a class="button" href="{{ url_for('music_recs') }}">Get New Insights</a>
+    </div>
 </main>
+
+<!-- Script for the play preview buttons -->
+<script>
+    function togglePlay(button) {
+        var audio = button.nextElementSibling;
+        var audioTime = button.nextElementSibling.nextElementSibling;
+        if (audio.paused) {
+            audio.play();
+            button.textContent = '❚❚';
+        } else {
+            audio.pause();
+            button.textContent = '▶';
+        }
+        audio.addEventListener('timeupdate', function() {
+            var minutes = Math.floor(audio.currentTime / 60);
+            var seconds = Math.floor(audio.currentTime % 60);
+            if (seconds < 10) {
+                seconds = '0' + seconds;
+            }
+            audioTime.textContent = minutes + ':' + seconds;
+        });
+    }
+</script>
 {% endblock %}

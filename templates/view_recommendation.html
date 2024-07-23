@@ -1,4 +1,3 @@
-<!-- templates/view_recommendation.html -->
 {% extends "layout.html" %}
 
 {% block content %}
@@ -12,7 +11,7 @@
                 <!-- Song Title -->
                 <a class="bold" href="{{ song.link }}" target="_blank">{{ song.song }}</a>
                 <br>
-                <!-- Song Artist-->
+                <!-- Song Artist -->
                 <i>{{ song.artist }}</i>
             </td>
             <!-- Song Preview -->
@@ -36,8 +35,8 @@
     </table>
 
     <div class="button-container">  
-        <a class="button" href="{{ url_for('user_form') }}">Get New Insights</a>
-        <a class="button" href="{{ url_for('home') }}">Home</a>
+        <a class="button" href="{{ url_for('home') }}">Return Home</a>
+        <a class="button" href="{{ url_for('music_recs') }}">Get New Insights</a>
     </div>
 </main>
 

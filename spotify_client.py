@@ -46,7 +46,6 @@ class SpotifyClient:
         self.token = token
 
 
-
     # Used for general api access
     def connectSpotifyAPI(self):
         auth_response = requests.post(
@@ -64,24 +63,14 @@ class SpotifyClient:
             print("Status Code: ", auth_response.status_code)
             return None
 
+
     def get_headers(self):
         return {'Authorization': f'Bearer {self.token}'}
 
+
     def get_profile_data(self):
-        auth_response_data = self.connectSpotifyAPI()
-
-        if 'access_token' in auth_response_data:
-            access_token = auth_response_data['access_token']
-            headers = {'Authorization': f'Bearer {access_token}'}
-            profile_url = f"{self.BASE_URL}me"
-            response = requests.get(profile_url, headers=headers)
-        auth_response_data = self.connectSpotifyAPI()
-
-        if 'access_token' in auth_response_data:
-            access_token = auth_response_data['access_token']
-            headers = {'Authorization': f'Bearer {access_token}'}
-            profile_url = f"{self.BASE_URL}me"
-            response = requests.get(profile_url, headers=headers)
+        profile_url = f"{self.BASE_URL}me"
+        response = requests.get(profile_url, headers=self.get_headers())
         if response.status_code == 200:
             return response.json()
         else:
@@ -89,21 +78,10 @@ class SpotifyClient:
             print("Status Code: ", response.status_code)
             return None
 
+
     def get_user_playlists(self):
-        auth_response_data = self.connectSpotifyAPI()
-
-        if 'access_token' in auth_response_data:
-            access_token = auth_response_data['access_token']
-            headers = {'Authorization': f'Bearer {access_token}'}
-            playlists_url = f"{self.BASE_URL}me/playlists"
-            response = requests.get(playlists_url, headers=headers)
-        auth_response_data = self.connectSpotifyAPI()
-
-        if 'access_token' in auth_response_data:
-            access_token = auth_response_data['access_token']
-            headers = {'Authorization': f'Bearer {access_token}'}
-            playlists_url = f"{self.BASE_URL}me/playlists"
-            response = requests.get(playlists_url, headers=headers)
+        playlists_url = f"{self.BASE_URL}me/playlists"
+        response = requests.get(playlists_url, headers=self.get_headers())
         if response.status_code == 200:
             return response.json()
         else:
@@ -111,21 +89,10 @@ class SpotifyClient:
             print("Status Code: ", response.status_code)
             return None
 
+
     def get_recent_tracks(self):
-        auth_response_data = self.connectSpotifyAPI()
-
-        if 'access_token' in auth_response_data:
-            access_token = auth_response_data['access_token']
-            headers = {'Authorization': f'Bearer {access_token}'}
-            recent_tracks_url = f"{self.BASE_URL}me/player/recently-played"
-            response = requests.get(recent_tracks_url, headers=headers)
-        auth_response_data = self.connectSpotifyAPI()
-
-        if 'access_token' in auth_response_data:
-            access_token = auth_response_data['access_token']
-            headers = {'Authorization': f'Bearer {access_token}'}
-            recent_tracks_url = f"{self.BASE_URL}me/player/recently-played"
-            response = requests.get(recent_tracks_url, headers=headers)
+        recent_tracks_url = f"{self.BASE_URL}me/player/recently-played"
+        response = requests.get(recent_tracks_url, headers=self.get_headers())
         if response.status_code == 200:
             return response.json()
         else:
@@ -133,28 +100,16 @@ class SpotifyClient:
             print("Status Code: ", response.status_code)
             return None
 
+
     def get_top_artists(self):
-        auth_response_data = self.connectSpotifyAPI()
-
-        if 'access_token' in auth_response_data:
-            access_token = auth_response_data['access_token']
-            headers = {'Authorization': f'Bearer {access_token}'}
-            top_artists_url = f"{self.BASE_URL}me/top/artists"
-            response = requests.get(top_artists_url, headers=headers)
-        auth_response_data = self.connectSpotifyAPI()
-
-        if 'access_token' in auth_response_data:
-            access_token = auth_response_data['access_token']
-            headers = {'Authorization': f'Bearer {access_token}'}
-            top_artists_url = f"{self.BASE_URL}me/top/artists"
-            response = requests.get(top_artists_url, headers=headers)
+        top_artists_url = f"{self.BASE_URL}me/top/artists"
+        response = requests.get(top_artists_url, headers=self.get_headers())
         if response.status_code == 200:
             return response.json()
         else:
             print("Failed to retrieve top artists")
             print("Status Code: ", response.status_code)
             return None
-
 
 
     def get_public_playlist_data(self, playlist_url):
@@ -194,15 +149,18 @@ class SpotifyClient:
             print("Failed to authenticate with Spotify API")
             return None
 
+
     def extract_song_titles(self, input_string):
         pattern = r'"([^"]+)"'
         matches = re.findall(pattern, input_string)
         return matches
 
+
     def get_song_link(self, track_id):
         base_url = 'https://open.spotify.com/track/'
         track_link = base_url + track_id
         return track_link
+
 
     def get_song_data(self, track_name):
         auth_response_data = self.connectSpotifyAPI()
@@ -238,6 +196,7 @@ class SpotifyClient:
 
         return None, None, None
 
+
     def get_playlist_tracks_artists(self, playlist_id):
         auth_response_data = self.connectSpotifyAPI()
 
@@ -265,7 +224,6 @@ class SpotifyClient:
             return None
     
 
-
     def get_track_ids_from_playlist(self, playlist_id):
         
         # Get a token
@@ -292,7 +250,8 @@ class SpotifyClient:
                 print("Failed to retrieve playlist tracks")
                 print("Status Code: ", response.status_code)
                 return None
-    
+
+
     def get_artist_ids_from_playlist(self, track_ids_str):
         auth_response_data = self.connectSpotifyAPI()
 
@@ -317,7 +276,7 @@ class SpotifyClient:
             print("Failed to authenticate")
             return None
     
-    
+
     def get_audio_features(self, track_ids_str):
         # Get a token
         auth_response_data = self.connectSpotifyAPI()
@@ -471,7 +430,8 @@ class SpotifyClient:
         else:
             print("Failed to get access token")
             return None
-    
+
+
     def get_recommendations(self, seed_tracks, seed_artists=None, limit=20, **kwargs):
         auth_response_data = self.connectSpotifyAPI()
 
@@ -508,7 +468,7 @@ class SpotifyClient:
             return None
 
     #return render_template('mood.html', top_tracks=tracks_artists, response=tracks_artists_str)
-      
+
 
     def get_playlist_tracks_artists(self, playlist_id):
         auth_response_data = self.connectSpotifyAPI()
@@ -535,7 +495,6 @@ class SpotifyClient:
             print("Failed to retrieve playlist tracks and artists")
             print("Status Code: ", response.status_code)
             return None
-    
 
 
     def get_track_ids_from_playlist(self, playlist_id):
@@ -564,7 +523,8 @@ class SpotifyClient:
                 print("Failed to retrieve playlist tracks")
                 print("Status Code: ", response.status_code)
                 return None
-    
+
+
     def get_artist_ids_from_playlist(self, track_ids_str):
         auth_response_data = self.connectSpotifyAPI()
 
@@ -589,7 +549,7 @@ class SpotifyClient:
             print("Failed to authenticate")
             return None
     
-    
+
     def get_audio_features(self, track_ids_str):
         # Get a token
         auth_response_data = self.connectSpotifyAPI()
@@ -743,7 +703,8 @@ class SpotifyClient:
         else:
             print("Failed to get access token")
             return None
-    
+
+
     def get_recommendations(self, seed_tracks, seed_artists=None, limit=20, **kwargs):
         auth_response_data = self.connectSpotifyAPI()
 
@@ -780,4 +741,3 @@ class SpotifyClient:
             return None
 
     #return render_template('mood.html', top_tracks=tracks_artists, response=tracks_artists_str)
-      
