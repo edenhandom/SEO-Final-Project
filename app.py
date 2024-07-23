@@ -383,13 +383,16 @@ def insights():
                         current_section = "Your Personality"
                         sections[current_section] = f"<p>{line[3:].strip()}</p>"
                     elif current_section:
+
                         if line.startswith('Your musical preferences:') or \
                            line.startswith('Personal insights:') or \
                            line.startswith('Personality:'):
                             continue
+
                         if line.startswith('- '):
                             line = line[2:].strip()
                         sections[current_section] += f"<p>{line}</p>"
+
 
                 note_start = chat_response.find('Note:')
                 if note_start != -1:
