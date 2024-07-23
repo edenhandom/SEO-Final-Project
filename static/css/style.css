@@ -436,6 +436,7 @@ option {
   background-color: #fff;
   color: #333;
   font-family: 'Courier New', Courier, monospace;
+}
 
 /********************* Add playlist function *********************/
 
@@ -462,7 +463,6 @@ option {
 
 /********************* SUBMIT FORM PAGE *********************/
 
-/* Targets preview songs */
 .audio-container {
   display: flex;
   align-items: center;
@@ -489,7 +489,7 @@ option {
 .submit-content {
   width: 100%;
   display: inline-block;
-  text-align: center; /* Center the text content */
+  text-align: center;
 }
 
 .songreceipt-container {
@@ -552,13 +552,15 @@ option {
   transform: translateX(-50%);
   width: 250px;
   height: auto;
-  z-index: 10; /* Ensure the tape is above other elements */
+  z-index: 10;
 }
+
 
 /********************* REC DATABASE FORM USER FORM PAGE *********************/
 
+/* REC DATABASE FORM USER FORM PAGE */
 .rec-db {
-  color: #000000; 
+  color: #000000;
   font-size: 1em;
   font-family: 'Courier New', Courier, monospace;
 }
@@ -590,7 +592,7 @@ option {
 .submit-content {
   width: 100%;
   display: inline-block;
-  text-align: center; /* Center the text content */
+  text-align: center;
 }
 
 .songreceipt-container {
@@ -608,7 +610,7 @@ option {
   box-shadow: 5px 5px #63598596;
   background-image: url("https://i.pinimg.com/736x/c5/11/6c/c5116cc0374e2273eb888d9f6fd4feae.jpg");
   width: 100%;
-  max-width: 600px; /* Ensure it doesn't exceed a reasonable width */
+  max-width: 600px;
 }
 
 .songreceipt table {
@@ -616,7 +618,7 @@ option {
 }
 
 .songreceipt td {
-  padding: 10px; /* Add padding to table cells */
+  padding: 10px;
 }
 
 .button-container {
@@ -636,15 +638,15 @@ option {
 
 .button:hover {
   background-color: #eee;
-  color: #63598596; 
+  color: #63598596;
 }
 
 .green-tape {
   position: absolute;
-  top: -35px; /* Adjust this value to control how much the tape overlaps */
+  top: -35px;
   left: 50%;
   transform: translateX(-50%);
   width: 250px;
   height: auto;
-  z-index: 10; /* Ensure the tape is above other elements */
+  z-index: 10;
 }

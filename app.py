@@ -381,6 +381,7 @@ def insights():
 
     return render_template('insights.html')
 
+
 @app.route('/music_recs', methods=['GET', 'POST'])
 def music_recs():
     if request.method == 'POST':
@@ -395,7 +396,6 @@ def music_recs():
             # Get track features from playlist
             track_features = spotify_client.get_playlist_tracks(playlist_id)
             
-            print(track_features)
             if track_features:
                 # Extract track IDs and popularities
                 track_ids = [track['track_id'] for track in track_features]
@@ -433,9 +433,7 @@ def music_recs():
                 - for each artist in the artists list, access id
                 - append that to artist_ids list
                 '''
-                # print("ids", artist_ids)
                 artist_count = Counter(artist_ids)
-                # print(artist_count)
                 ''' genre_counter = Counter(
                     genre 
                     for track in track_features 
@@ -447,7 +445,6 @@ def music_recs():
                 print(seed_artists)
                 # seed_genres = [genre for genre, _ in genre_counter.most_common(5)]
                 seed_tracks = random.sample(track_ids, min(3, len(track_ids)))
-                print(seed_tracks)
                 # Get recommendations
                 try: 
                     recommendations_response = spotify_client.get_recommendations(
@@ -468,19 +465,20 @@ def music_recs():
                 if recommendations_response and 'tracks' in recommendations_response:
                     recommendations = [
                         {
-                            'song': track['name'], 
-                            'artist': ', '.join(artist['name'] for artist in track['artists'])
-                        } 
+                            'song': track['name'],
+                            'artist': ', '.join(artist['name'] for artist in track['artists']),
+                            'track_id': track['id'],
+                            'preview_url': track['preview_url'],
+                            'link': spotify_client.get_song_link(track['id'])
+                        }
                         for track in recommendations_response['tracks']
                     ]
                 else:
                     recommendations = []
-                    
+
                 return render_template('view_music_recs.html', recommendations=recommendations)
-            
             else:
                 return "Failed to get track features or no tracks found in the playlist.", 400
-        
     return render_template('music_recs.html')
 
 
