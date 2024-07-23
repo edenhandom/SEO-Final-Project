@@ -32,6 +32,7 @@ recommended_songs_df = pd.DataFrame(
 
 app = Flask(__name__)  # static_folder="static", static_url_path=""
 app.config['SECRET_KEY'] = os.urandom(64)   # generate random session key
+
 # Configure session to use filesystem (server-side session storage)
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(
@@ -52,8 +53,6 @@ openai_client = OpenAIClient(USER_KEY)
 user_session = UserSession()
 
 # First page that User sees. A login page
-
-
 @app.route('/')
 def login_page():
     return render_template('login_page.html')
@@ -67,7 +66,6 @@ def login():
     return redirect(spotify_client.get_auth_url())
 
 # Callback route to handle the redirect from Spotify
-
 @app.route('/callback')
 def callback():
     code = request.args.get('code')

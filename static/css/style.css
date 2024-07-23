@@ -712,6 +712,14 @@ option {
   color: white; 
 }
 
+div.button-container a.button {
+  padding: 10px 15px;
+}
+div.button-container {
+  display: flex;
+  align-content: center;
+}
+
 /********************* MUSIC RECS PAGE *********************/
 
 .notepad-rec-container {
@@ -783,4 +791,12 @@ option {
   font-family: 'Schoolbell', cursive;
   color: #333; /* Adjust color as needed */
   font-size: 1em; /* Adjust font size as needed */
+}
+
+div.return-buttons a.button {
+  padding: 10px 15px;
+}
+div.return-buttons {
+  display: flex;
+  align-content: center;
 }
