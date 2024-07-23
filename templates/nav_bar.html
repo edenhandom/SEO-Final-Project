@@ -3,10 +3,46 @@
 {% block content %}
 <div class="screen" id="menu">
   <div class="ipod-header"><a href="home">Mood Mix</a></div>
-  <div class="menu-item"><a href="about_us"><h6>About Us</h6><p>&gt;</p></a></div>
-  <div class="menu-item"><a href="insights"><h6>Insights</h6><p>&gt;</p></a></div>
-  <div class="menu-item"><a href="user_form"><h6>User Form</h6><p>&gt;</p></a></div>
-  <div class="menu-item"><a href="mood"><h6>Music Mood</h6><p>&gt;</p></a></div>
-  <div class="menu-item"><a href ="music_recs"><h6>Music Recs</h6><p>&gt;</p></a></div>
+  <div class="menu-item"><a href="about_us" id="about_us"><h6></h6><p>&gt;</p></a></div>
+  <div class="menu-item"><a href="insights" id="insights"><h6></h6><p>&gt;</p></a></div>
+  <div class="menu-item"><a href="user_form" id="user_form"><h6></h6><p>&gt;</p></a></div>
+  <div class="menu-item"><a href="mood" id="mood"><h6></h6><p>&gt;</p></a></div>
+  <div class="menu-item"><a href="music_recs" id="music_recs"><h6></h6><p>&gt;</p></a></div>
 </div>
+
+
+<script>
+  // Function to type out text letter by letter and append HTML content
+  function typeTextWithHTML(text, elementId) {
+    let i = 0;
+    const speed = 40; // Adjust speed as needed
+    const element = document.getElementById(elementId).getElementsByTagName('h6')[0];
+    element.innerHTML = "";
+    
+    function typeWriter() {
+      if (i < text.length) {
+        element.innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeWriter, speed);
+      }
+    }
+    
+    typeWriter();
+  }
+
+  // Function to start the animation after 0.5 seconds
+  function startMenuTypingEffect() {
+    setTimeout(function() {
+      typeTextWithHTML("About Us", "about_us");
+      typeTextWithHTML("Insights", "insights");
+      typeTextWithHTML("User Form", "user_form");
+      typeTextWithHTML("Music Mood", "mood");
+      typeTextWithHTML("Music Recs", "music_recs");
+    }, 0); 
+  }
+
+  // Call the function when the page loads
+  window.onload = startMenuTypingEffect;
+</script>
+
 {% endblock %}

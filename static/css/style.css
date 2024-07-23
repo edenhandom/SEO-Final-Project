@@ -5,7 +5,7 @@
   --ipod-text-color: #272A4B;
 
   /* Ipod Stuff */
-  --ipod-height: 45vh;
+  --ipod-height: 42.5vh;
   --ipod-text-size: calc(var(--ipod-height) * 0.05);
 
   --screen-width: calc((var(--ipod-height)) * 0.645);
@@ -14,8 +14,8 @@
   --screen-position-x: calc(var(--ipod-height) * 0.18);
 
   /* Text Stuff */
-  --main-font: "Open Sans", sans-serif;
-  --header: 1em;
+  --main-font: "Poppins", sans-serif;
+  --header: 1.1em;
   --main-text: 1em;
   --subheader: 1em;
 }
@@ -36,10 +36,13 @@ h1 {
 
 h2 {
   font-size: var(--subheader);
+  font-weight: 600;
+  margin: 0px 0px 10px 0px;
 }
 
 p {
   font-size: var(--main-text);
+  margin-bottom: 10px;
 }
 
 /********************* PAGE HEADER / LAYOUT *********************/
@@ -151,7 +154,7 @@ p {
   /* Size of Ipod */
   width: fit-content;
   position: relative;
-  margin: 1rem;
+  margin: 1rem 1rem 6vh 1rem;
 
   font-family: "Pixelify Sans", sans-serif;
 }
@@ -211,6 +214,7 @@ p {
 }
 
 .menu-item p {
+  margin: 0px;
   font-size: 10px;
   font-weight: bold;
 }
@@ -276,7 +280,7 @@ p {
 }
 
 .big-break {
-  height: 150px; /* Adjust this value to control the size of the break */
+  height: 50px;  /*Adjust this value to control the size of the break */
   width: 100%;
 }
 
@@ -298,7 +302,7 @@ p {
 
 .clip-image {
   position: absolute;
-  top: -120px; /* Adjust to control how much the clip overlaps */
+  top: -100px; /* Adjust to control how much the clip overlaps */
   left: 50%;
   transform: translateX(-50%);
   width: 250px; /* Adjust based on size of clip image */
@@ -317,7 +321,7 @@ p {
   font-size: 1em;
   padding: 5vw;
   box-shadow: 5px 5px #63598596;
-  border-radius: 10px;
+  border-radius: 5px;
   z-index: 1;
 }
 
@@ -328,7 +332,7 @@ p {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('../images/paper.jpeg');
+  background-image: url('../images/paper.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -359,34 +363,29 @@ input[type="text"]::placeholder, textarea::placeholder {
   margin-bottom: 15px;
 }
 
-.left-side p {
-  margin-bottom: 10px;
-}
-
 .see-more-container {
   margin-top: 10px;
 }
 
 .explanation {
   display: none;
-  margin-top: 10px;
+  /*margin-top: 30px;*/
 }
 
-/* Additional styles for the explanations when shown */
-.explanation h1 {
-  margin-top: 0;
-  margin-bottom: 5px;
+/* Additional styles for the explanations when shown 
+.left-side h2 {
+  margin: 0px 0px 10px 0px;
 }
 
-.explanation p {
-  margin-top: 0;
+.left-side p {
   margin-bottom: 10px;
 }
+*/
 
 /* Style for the submit button */
 button[type="submit"], button[type="button"]{
   text-decoration: underline;
-  align: center;
+  text-align: center;
   background-color: transparent;
   border: 1px solid transparent;
   color: #ABBBD2;

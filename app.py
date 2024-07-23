@@ -68,14 +68,19 @@ def login():
 
 # Callback route to handle the redirect from Spotify
 
-
 @app.route('/callback')
 def callback():
     code = request.args.get('code')
-    spotify_client.get_token(code)
+    token = spotify_client.get_token(code)
+
+    # Check for bad login 
+    if not token:
+        text = "Mood Mix could not Access your music data! </p><br>"
+        text += "<p> Try accessing the again site later :["
+        return render_template('login_page.html', page='status.html', text=text)
+    
     user_session.set_token(spotify_client.token)
     return redirect(url_for('home'))
-
 
 @app.route('/home')
 def home():
