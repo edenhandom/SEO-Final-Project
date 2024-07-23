@@ -3,7 +3,8 @@
 {% block content %}
 <main class="container">
     <h3>Your Recommended Songs</h3>
-    <table>
+    <br>
+    <table class="rec-db">
         {% for song in recommendations %}
         <tr class="song">
             <td>
@@ -32,7 +33,7 @@
         </tr>
         {% endfor %}
     </table>
-
+    <br>
     <div class="return-buttons">
         <a class="button" href="{{ url_for('home') }}">Return Home</a>
         <a class="button" href="{{ url_for('music_recs') }}">Get New Insights</a>

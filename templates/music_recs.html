@@ -3,33 +3,40 @@
 {% block title %}Get Playlist Insights{% endblock %}
 
 {% block content %}
-    <h2>Get Playlist Insights!</h2>
+
+    <link href="https://fonts.googleapis.com/css2?family=Schoolbell&display=swap" rel="stylesheet">
+
+    <h2>Playlist recommendations!</h2>
     <p>
-        Ever wondered what your playlists say about you? Select your playlists
-        and get some insights into your musical preferences and personality!
+        Looking to listen to something new? Drop a playlist link 
+        below and we will provide a curated list of songs that match
+        your playlist's vibe.
     </p>
-
+    <br>
     <!-- Container for background image and button -->
-    <div class="image-container">
-        <img src="{{ url_for('static', filename='images/notepad.png') }}" alt="Background Image" class="background-image">
-        <button id="add-playlist-trigger" class="add-playlist-button">
-            <img src="{{ url_for('static', filename='images/add_playlist_button.png') }}" alt="Add Playlist Button">
-        </button>
+    <div class="notepad-rec-container">
+        <div class="notepad-rec">        
+            <form action="{{ url_for('music_recs') }}" method="post">
+                <div class="med-break"></div>
+                <label for="playlist_url">Spotify Playlist URL:</label>
+                <input type="text" id="playlist_url" name="playlist_url" placeholder="Enter your playlist URL:" required>                
+            
+                <div class="button-container">  
+                    <button type="submit">Get some recs!</button>
+                </div>
+
+            </form>
+        
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
     </div>
-
-    <form action="{{ url_for('music_recs') }}" method="post">
-        <label for="playlist_url">Spotify Playlist URL:</label>
-        <input type="text" id="playlist_url" name="playlist_url" required>
-        <button type="submit">Get Insights</button>
-    </form>
-
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul>
-        {% for message in messages %}
-            <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-    {% endwith %}
+    
 {% endblock %}
