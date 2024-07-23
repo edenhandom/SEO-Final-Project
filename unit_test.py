@@ -168,7 +168,7 @@ class TestExtractSongTitles(unittest.TestCase):
     public playlist -> gets a token
     """
 
-    from spotify_client import SpotifyClient
+    from util.spotify_client import SpotifyClient
 
     CLIENT_ID = os.environ.get("CLIENT_ID")
     CLIENT_SECRET = os.environ.get("CLIENT_SECRET")

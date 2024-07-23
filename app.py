@@ -1,4 +1,4 @@
-from user_form import UserForm
+from util.user_form import UserForm
 import os
 import json
 import uuid
@@ -14,9 +14,9 @@ from collections import Counter
 ''''
 Import our Classes
 '''
-from user_session import UserSession
-from spotify_client import SpotifyClient
-from openai_client import OpenAIClient
+from util.user_session import UserSession
+from util.spotify_client import SpotifyClient
+from util.openai_client import OpenAIClient
 
 '''
 Import our modules
