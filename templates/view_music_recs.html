@@ -3,18 +3,21 @@
 {% block content %}
 <main class="container">
     <h3>Your Recommended Songs</h3>
-    <table>
-        {% for song in recommendations %}
-        <tr class="song">
-            <td>
-                <!-- Song Title -->
-                <a class="bold" href="{{ song.link }}" target="_blank">{{ song.song }}</a>
-                <br>
-                <!-- Song Artist -->
-                <i>{{ song.artist }}</i>
-            </td>
-            <!-- Song Preview -->
-            <td>
+    <div class="med-break"></div>
+    <div class="songreceipt-container">
+        <div class="songreceipt">
+            <img src="static/images/green-tape.png" alt="Tape" class="green-tape">
+            <table>        {% for song in recommendations %}
+                <tr class="song">
+                    <td>
+                        <!-- Song Title -->
+                        <a class="bold" href="{{ song.link }}" target="_blank">{{ song.song }}</a>
+                        <br>
+                        <!-- Song Artist -->
+                        <i>{{ song.artist }}</i>
+                    </td>
+                    <!-- Song Preview -->
+                    <td>
                 {% if song.preview_url %}
                 <div class="audio-container">
                     <button class="audio-button mono-font" onclick="togglePlay(this)">▶</button>
@@ -32,10 +35,12 @@
         </tr>
         {% endfor %}
     </table>
-
+    <br>
     <div class="return-buttons">
         <a class="button" href="{{ url_for('home') }}">Return Home</a>
         <a class="button" href="{{ url_for('music_recs') }}">Get New Insights</a>
+    </div>
+        </div>
     </div>
 </main>
 
