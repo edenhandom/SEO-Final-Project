@@ -13,7 +13,7 @@ import spotify_Input
 from flask import (Flask, request, redirect, session, 
                    url_for, render_template, flash)
 
-from user_form import UserForm
+from util.user_form import UserForm
 
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
