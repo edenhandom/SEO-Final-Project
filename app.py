@@ -352,10 +352,7 @@ def view_recommendations():
 @app.route('/insights', methods=['GET', 'POST'])
 def insights():
     if request.method == 'POST':
-        print("Form submitted")
         playlist_url = request.form.get('playlist_url')
-        print(f"Received playlist URL: {playlist_url}")
-
         if playlist_url:
             display_name, profile_image_url = spotify_client.get_user_profile_info()
             track_artist = spotify_client.get_public_playlist_data(playlist_url)
@@ -373,7 +370,6 @@ def insights():
 
                 chat_response = openai_client.get_chat_response(prompt)
 
-                # Process the chat response into sections
                 sections = {}
                 current_section = None
 
@@ -389,17 +385,14 @@ def insights():
                         current_section = "Your Personality"
                         sections[current_section] = f"<p>{line[3:].strip()}</p>"
                     elif current_section:
-                        # Remove any redundant headers within the content
                         if line.startswith('Your musical preferences:') or \
                            line.startswith('Personal insights:') or \
                            line.startswith('Personality:'):
                             continue
-                        # Remove leading dashes and extra spaces
                         if line.startswith('- '):
                             line = line[2:].strip()
                         sections[current_section] += f"<p>{line}</p>"
 
-                # Handle the note at the end if present
                 note_start = chat_response.find('Note:')
                 if note_start != -1:
                     sections["Note"] = f"<p>{chat_response[note_start:].strip()}</p>"
@@ -416,7 +409,7 @@ def insights():
 
     return render_template('insights.html')
 
-
+# Provides personalized spotify recommendations based on playlist
 @app.route('/music_recs', methods=['GET', 'POST'])
 def music_recs():
     if request.method == 'POST':
@@ -428,25 +421,18 @@ def music_recs():
             except IndexError:
                 return "Invalid playlist URL.", 400
             
-            # Get track features from playlist
             track_features = spotify_client.get_playlist_tracks(playlist_id)
             
             if track_features:
-                # Extract track IDs and popularities
                 track_ids = [track['track_id'] for track in track_features]
-                track_ids_str = ','.join(track_ids)
                 popularities = [track['popularity'] for track in track_features]
 
-                # Calculate average popularity
                 average_popularity = int(sum(popularities) / len(popularities)) if popularities else 0
-                
-                # Get audio features
                 audio_features = spotify_client.get_audio_features(','.join(track_ids))
                 
                 if not audio_features:
                     return "Failed to get audio features.", 500
                 
-                # Aggregate audio features
                 aggregated_features = {
                     'target_danceability': sum([feature['danceability'] for feature in audio_features if feature]) / len(audio_features),
                     'target_energy': sum([feature['energy'] for feature in audio_features if feature]) / len(audio_features),
@@ -455,38 +441,23 @@ def music_recs():
                     'target_tempo': sum([feature['tempo'] for feature in audio_features if feature]) / len(audio_features),
                     'target_popularity': int(average_popularity)
                 }
-                
-                # Count artists and genres
+
                 artist_ids = []
                 for track in track_features:
                     artists_id = track['artist_id']
                     for artist in artists_id:
                         artist_id = artist['id']
                         artist_ids.append(artist_id)
-                '''
-                - for each track in track features, access artists key
-                - for each artist in the artists list, access id
-                - append that to artist_ids list
-                '''
+                
                 artist_count = Counter(artist_ids)
-                ''' genre_counter = Counter(
-                    genre 
-                    for track in track_features 
-                    for artist in track['artists'] 
-                    for genre in artist.get('genres', [])
-                )            
-                   '''  
+                 
                 seed_artists = [artist for artist, _ in artist_count.most_common(2)]
-                print(seed_artists)
-                # seed_genres = [genre for genre, _ in genre_counter.most_common(5)]
                 seed_tracks = random.sample(track_ids, min(3, len(track_ids)))
-                # Get recommendations
                 try: 
                     recommendations_response = spotify_client.get_recommendations(
                         limit=20,
                         seed_artists=seed_artists,
                         seed_tracks=seed_tracks,
-                        # seed_genres=seed_genres,
                         target_danceability=aggregated_features['target_danceability'],
                         target_energy=aggregated_features['target_energy'],
                         target_valence=aggregated_features['target_valence'],
