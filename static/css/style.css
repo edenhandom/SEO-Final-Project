@@ -285,6 +285,10 @@ p {
   width: 100%;
 }
 
+.small-break {
+  height: 25px; /* Adjust this value to control the size of the break */
+  width: 100%;
+}
 
 .personality-traits-textarea {
   width: 80%; 
@@ -595,31 +599,6 @@ option {
   text-align: center;
 }
 
-.songreceipt-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.songreceipt {
-  font-family: 'Courier New', Courier, monospace;
-  position: relative;
-  font-size: 1em;
-  color: var(--purple);
-  padding: 2rem;
-  box-shadow: 5px 5px #63598596;
-  background-image: url("https://i.pinimg.com/736x/c5/11/6c/c5116cc0374e2273eb888d9f6fd4feae.jpg");
-  width: 100%;
-  max-width: 600px;
-}
-
-.songreceipt table {
-  width: 100%;
-}
-
-.songreceipt td {
-  padding: 10px;
-}
 
 .button-container {
   display: flex;
@@ -650,3 +629,87 @@ option {
   height: auto;
   z-index: 10;
 }
+
+/********************* INSIGHTS PAGE *********************/
+
+.notepad-container {
+  position: relative;
+  width: 100%;
+  min-height: 80vh; /* Reduce the height to fit content better */
+  background-image: url('../images/notepad.png');
+  background-size: contain; /* Scale the image down proportionally */
+  background-position: top center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align items at the top */
+  padding-top: 20px; /* Adjust padding to position content well */
+  margin-bottom: 20px; /* Add some margin at the bottom to separate from the button */
+}
+
+.notepad {
+  padding: 20px;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 10px;
+  text-align: center; /* Center the text content */
+}
+
+.notepad form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the form elements */
+}
+
+.notepad label, .notepad input, .notepad button {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.notepad label {
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.notepad input {
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 1em;
+  width: 80%; /* Adjust the width to make the input smaller */
+  max-width: 400px; /* Ensure the input does not exceed a reasonable width */
+}
+
+.notepad button {
+  padding: 10px 20px;
+  font-size: 1em;
+  background-color: var(--purple);
+  color: var(--screen-color);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.notepad button:hover {
+  background-color: var(--aqua);
+}
+
+.add-playlist-container {
+  text-align: center; 
+  margin-top: 10px; 
+}
+
+.add-playlist-link {
+  font-size: 18px; 
+  color: #007bff; 
+  text-decoration: none; 
+  padding: 10px 20px; 
+  border: 2px solid #007bff; 
+  border-radius: 5px; 
+  display: inline-block; 
+  transition: background-color 0.3s, color 0.3s; 
+}
+
+.add-playlist-link:hover {
+  background-color: #007bff; 
+  color: white; 
+}
+
