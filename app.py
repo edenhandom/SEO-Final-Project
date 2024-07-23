@@ -249,7 +249,6 @@ def submit_page():
         example3 = user_data.get('optional_field3', fav_genre3)
 
         history_prompt = user_data.get('include_history', 'Unknown')
-        print(history_prompt)
 
         if history_prompt == 'yes':
             recent_tracks_data = spotify_client.get_recent_tracks()
@@ -292,7 +291,6 @@ def submit_page():
                 f"song title only in quotes. "
                 f"Format like: 'Song1'\n 'Song2'\n...'")
 
-        print(prompt)
         recommendations = openai_client.get_chat_response(prompt)
         song_list = spotify_client.extract_song_titles(recommendations)
 
