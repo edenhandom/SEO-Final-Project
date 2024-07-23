@@ -4,11 +4,11 @@
 
 {% block content %}
     <h2>Playlist Analysis Results</h2>
-    <br>
-    <br>
+    
+    <div class="small-break"></div>
     <p>{{ chat_response | safe }}</p>
-    <br>
-    <br>
+    <div class="small-break"></div>
+
     <div class="return-buttons">
         <a class="button" href="{{ url_for('home') }}">Return Home</a>
         <a class="button" href="{{ url_for('insights') }}">Get More Insights!</a>

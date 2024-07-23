@@ -21,7 +21,7 @@
     <h2>Your mood is: {{ mood_response }}</h2>
     <p>Your recently played tracks:</p>
     <br>
-    <table>
+    <table class="rec-db">
         {% for song in response %}
         <tr class="song">
             <td>
@@ -53,7 +53,7 @@
 {% elif action == 'submit_mood' and response %}
     <p>Playlist based on your mood "{{ user_mood }}":</p>
     <br>
-    <table>
+    <table class="rec-db">
         {% for song in response %}
         <tr class="song">
             <td>

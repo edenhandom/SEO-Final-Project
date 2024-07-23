@@ -157,9 +157,7 @@ def mood():
                 song_with_preview = []
 
                 for song in song_list:
-                    track_id,
-                    preview_url,
-                    artist_name = spotify_client.get_song_data(song)
+                    track_id, preview_url, artist_name = spotify_client.get_song_data(song)
                     if track_id and preview_url and artist_name:
                         song_with_preview.append({
                             'song': song,
