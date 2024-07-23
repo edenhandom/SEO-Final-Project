@@ -712,3 +712,75 @@ option {
   color: white; 
 }
 
+/********************* MUSIC RECS PAGE *********************/
+
+.notepad-rec-container {
+  font-family: 'Schoolbell', cursive; /* Apply the Schoolbell font */
+  position: relative;
+  width: 100%;
+  min-height: 70vh; /* Increase the height to fit content better */
+  background-image: url('../images/notepad.png');
+  background-size: cover; /* Make the image cover the entire container */
+  background-position: top center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align items at the top */
+  padding-top: 40px; /* Adjust padding to position content well */
+  margin-bottom: 20px; /* Add some margin at the bottom to separate from the button */
+}
+
+.notepad-rec {
+  padding: 20px;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 10px;
+  text-align: center; /* Center the text content */
+}
+
+.notepad-rec form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the form elements */
+}
+
+.notepad-rec label, .notepad-rec input, .notepad-rec button {
+  font-family: 'Schoolbell', cursive; /* Apply the Schoolbell font to form elements */
+}
+
+.notepad-rec label {
+  font-family: 'Schoolbell', cursive; /* Apply the Schoolbell font */
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.notepad-rec input {
+  padding: 5px;
+  margin-bottom: 20px;
+  font-size: 1em;
+  width: 80%; /* Adjust the width to make the input smaller */
+  max-width: 400px; /* Ensure the input does not exceed a reasonable width */
+}
+
+.notepad-rec button {
+  padding: 5px;
+  font-size: 1em;
+  background-color: var(--purple);
+  color: #333;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.notepad-rec button:hover {
+  background-color: transparent;
+  font-family: 'Schoolbell', cursive; /* Apply the Schoolbell font */
+  color: #ABBBD2;
+}
+
+/* Style the placeholder text */
+.notepad-rec input::placeholder {
+  font-family: 'Schoolbell', cursive;
+  color: #333; /* Adjust color as needed */
+  font-size: 1em; /* Adjust font size as needed */
+}
