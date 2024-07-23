@@ -24,10 +24,10 @@ Import our modules
 
 # Initialize an empty DataFrame with the appropriate columns
 recommended_songs_df = pd.DataFrame(
-    columns=['song', 
-             'artist', 
-             'track_id', 
-             'preview_url', 
+    columns=['song',
+             'artist',
+             'track_id',
+             'preview_url',
              'user_id'])
 
 app = Flask(__name__)  # static_folder="static", static_url_path=""
@@ -53,6 +53,8 @@ openai_client = OpenAIClient(USER_KEY)
 user_session = UserSession()
 
 # First page that User sees. A login page
+
+
 @app.route('/')
 def login_page():
     return render_template('login_page.html')
@@ -66,19 +68,25 @@ def login():
     return redirect(spotify_client.get_auth_url())
 
 # Callback route to handle the redirect from Spotify
+
+
 @app.route('/callback')
 def callback():
     code = request.args.get('code')
     token = spotify_client.get_token(code)
 
-    # Check for bad login 
+    # Check for bad login
     if not token:
         text = "Mood Mix could not Access your music data! </p><br>"
         text += "<p> Try accessing the again site later :["
-        return render_template('login_page.html', page='status.html', text=text)
-    
+        return render_template(
+            'login_page.html',
+            page='status.html',
+            text=text)
+
     user_session.set_token(spotify_client.token)
     return redirect(url_for('home'))
+
 
 @app.route('/home')
 def home():
@@ -151,8 +159,7 @@ def mood():
                     f"Please list each song on a "
                     f"new line, song title only in quotes. "
                     f"Format like: 'Song1'\n 'Song2'\n..."
-                    )
-
+                )
 
                 raw_response = openai_client.get_chat_response(prompt)
                 song_list = spotify_client.extract_song_titles(raw_response)
@@ -160,7 +167,8 @@ def mood():
                 song_with_preview = []
 
                 for song in song_list:
-                    track_id, preview_url, artist_name = spotify_client.get_song_data(song)
+                    track_id, preview_url, artist_name = spotify_client.get_song_data(
+                        song)
                     if track_id and preview_url and artist_name:
                         song_with_preview.append({
                             'song': song,
@@ -261,7 +269,6 @@ def submit_page():
                  f"{artist}" for track, artist
                  in tracks_artists.items()])
 
-
             prompt = (
                 f"Give me a playlist of recommended songs based on my "
                 f"star sign: {star_sign}, "
@@ -345,16 +352,20 @@ def view_recommendations():
     )
 
 # Displays personal insight based on provided playlist
+
+
 @app.route('/insights', methods=['GET', 'POST'])
 def insights():
     if request.method == 'POST':
         playlist_url = request.form.get('playlist_url')
         if playlist_url:
             display_name, profile_image_url = spotify_client.get_user_profile_info()
-            track_artist = spotify_client.get_public_playlist_data(playlist_url)
+            track_artist = spotify_client.get_public_playlist_data(
+                playlist_url)
 
             if track_artist:
-                tracks_artists_str = '. '.join([f"{track}: {artist}" for track, artist in track_artist.items()])
+                tracks_artists_str = '. '.join(
+                    [f"{track}: {artist}" for track, artist in track_artist.items()])
 
                 prompt = (f'Here is my playlist: {tracks_artists_str}. '
                           f'I want to know what these songs say about my: '
@@ -391,7 +402,6 @@ def insights():
                             line = line[2:].strip()
                         sections[current_section] += f"<p>{line}</p>"
 
-
                 note_start = chat_response.find('Note:')
                 if note_start != -1:
                     sections["Note"] = f"<p>{chat_response[note_start:].strip()}</p>"
@@ -409,29 +419,35 @@ def insights():
     return render_template('insights.html')
 
 # Provides personalized spotify recommendations based on playlist
+
+
 @app.route('/music_recs', methods=['GET', 'POST'])
 def music_recs():
     if request.method == 'POST':
         playlist_url = request.form.get('playlist_url')
-        
+
         if playlist_url:
             try:
                 playlist_id = playlist_url.split('/playlist/')[1].split('?')[0]
             except IndexError:
                 return "Invalid playlist URL.", 400
-            
+
             track_features = spotify_client.get_playlist_tracks(playlist_id)
-            
+
             if track_features:
                 track_ids = [track['track_id'] for track in track_features]
-                popularities = [track['popularity'] for track in track_features]
+                popularities = [track['popularity']
+                                for track in track_features]
 
-                average_popularity = int(sum(popularities) / len(popularities)) if popularities else 0
-                audio_features = spotify_client.get_audio_features(','.join(track_ids))
-                
+                average_popularity = int(
+                    sum(popularities) /
+                    len(popularities)) if popularities else 0
+                audio_features = spotify_client.get_audio_features(
+                    ','.join(track_ids))
+
                 if not audio_features:
                     return "Failed to get audio features.", 500
-                
+
                 aggregated_features = {
                     'target_danceability': sum([feature['danceability'] for feature in audio_features if feature]) / len(audio_features),
                     'target_energy': sum([feature['energy'] for feature in audio_features if feature]) / len(audio_features),
@@ -447,12 +463,14 @@ def music_recs():
                     for artist in artists_id:
                         artist_id = artist['id']
                         artist_ids.append(artist_id)
-                
+
                 artist_count = Counter(artist_ids)
-                 
-                seed_artists = [artist for artist, _ in artist_count.most_common(2)]
+
+                seed_artists = [
+                    artist for artist,
+                    _ in artist_count.most_common(2)]
                 seed_tracks = random.sample(track_ids, min(3, len(track_ids)))
-                try: 
+                try:
                     recommendations_response = spotify_client.get_recommendations(
                         limit=20,
                         seed_artists=seed_artists,
@@ -462,9 +480,8 @@ def music_recs():
                         target_valence=aggregated_features['target_valence'],
                         target_acousticness=aggregated_features['target_acousticness'],
                         target_tempo=aggregated_features['target_tempo'],
-                        target_popularity=average_popularity
-                    )
-                except:
+                        target_popularity=average_popularity)
+                except BaseException:
                     print("Error with recommendations")
 
                 if recommendations_response and 'tracks' in recommendations_response:
@@ -481,7 +498,9 @@ def music_recs():
                 else:
                     recommendations = []
 
-                return render_template('view_music_recs.html', recommendations=recommendations)
+                return render_template(
+                    'view_music_recs.html',
+                    recommendations=recommendations)
             else:
                 return "Failed to get track features or no tracks found in the playlist.", 400
     return render_template('music_recs.html')
