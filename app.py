@@ -357,13 +357,11 @@ def insights():
         print(f"Received playlist URL: {playlist_url}")
 
         if playlist_url:
-            track_artist = spotify_client.get_public_playlist_data(
-                playlist_url)
+            display_name, profile_image_url = spotify_client.get_user_profile_info()
+            track_artist = spotify_client.get_public_playlist_data(playlist_url)
 
             if track_artist:
-                tracks_artists_str = '. '.join(
-                    [f"{track}: {artist}"
-                     for track, artist in track_artist.items()])
+                tracks_artists_str = '. '.join([f"{track}: {artist}" for track, artist in track_artist.items()])
 
                 prompt = (f'Here is my playlist: {tracks_artists_str}. '
                           f'I want to know what these songs say about my: '
@@ -371,13 +369,47 @@ def insights():
                           f'2. Personal insights, and '
                           f'3. Personality. '
                           f'Be concise and format with line breaks between '
-                          f'each insight.')
+                          f'each insight, and do not use dashes for lists.')
 
                 chat_response = openai_client.get_chat_response(prompt)
-                chat_response = chat_response.replace('\n', '<br>')
+
+                # Process the chat response into sections
+                sections = {}
+                current_section = None
+
+                for line in chat_response.split('\n'):
+                    line = line.strip()
+                    if line.startswith('1. '):
+                        current_section = "Your Music Taste"
+                        sections[current_section] = f"<p>{line[3:].strip()}</p>"
+                    elif line.startswith('2. '):
+                        current_section = "Personal Insights"
+                        sections[current_section] = f"<p>{line[3:].strip()}</p>"
+                    elif line.startswith('3. '):
+                        current_section = "Your Personality"
+                        sections[current_section] = f"<p>{line[3:].strip()}</p>"
+                    elif current_section:
+                        # Remove any redundant headers within the content
+                        if line.startswith('Your musical preferences:') or \
+                           line.startswith('Personal insights:') or \
+                           line.startswith('Personality:'):
+                            continue
+                        # Remove leading dashes and extra spaces
+                        if line.startswith('- '):
+                            line = line[2:].strip()
+                        sections[current_section] += f"<p>{line}</p>"
+
+                # Handle the note at the end if present
+                note_start = chat_response.find('Note:')
+                if note_start != -1:
+                    sections["Note"] = f"<p>{chat_response[note_start:].strip()}</p>"
 
                 return render_template(
-                    'result.html', chat_response=chat_response)
+                    'result.html',
+                    sections=sections,
+                    display_name=display_name,
+                    profile_image_url=profile_image_url
+                )
 
         flash("Please enter a valid playlist URL.")
         return redirect(url_for('insights'))
