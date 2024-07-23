@@ -3,18 +3,21 @@
 {% block title %}Get Playlist Insights{% endblock %}
 
 {% block content %}
+
+    <link href="https://fonts.googleapis.com/css2?family=Schoolbell&display=swap" rel="stylesheet">
+
     <h2>Get Playlist Insights!</h2>
     <p>
         Ever wondered what your playlists say about you? Select your playlists
         and get some insights into your musical preferences and personality!
     </p>
     <br>
-    <div class="notepad-container">
-        <div class="notepad">
+    <div class="notepad-rec-container">
+        <div class="notepad-rec">
             <form action="{{ url_for('insights') }}" method="post">
                 <div class="med-break"></div>
                 <label for="playlist_url">Spotify Playlist URL:</label>
-                <input type="text" id="playlist_url" name="playlist_url" required>
+                <input type="text" id="playlist_url" name="playlist_url" placeholder="Enter your playlist URL:" required>                
                 <button type="submit">Get Insights</button>
             </form>
             {% with messages = get_flashed_messages() %}
