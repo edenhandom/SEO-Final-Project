@@ -1,3 +1,4 @@
+import git
 from util.user_form import UserForm
 import os
 import json
@@ -503,6 +504,14 @@ def music_recs():
                 return "Failed to get track features or no tracks found in the playlist.", 400
     return render_template('music_recs.html')
 
-
+@app.route("/update_server", methods=['POST'])
+def webhook():
+    if request.method == 'POST':
+        repo = git.Repo('/home/bkodi/SEO-Final-Project')
+        origin = repo.remotes.origin
+        origin.pull()
+        return 'Updated PythonAnywhere successfully', 200
+    else:
+        return 'Wrong event type', 400
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=3000)
