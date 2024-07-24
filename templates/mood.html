@@ -32,7 +32,7 @@
         </p>
         <p style="margin-bottom:0px"> ____________________________________________________________ </p>
         
-        <table id="recent-tracks" style="display:none;">
+        <table class="recent-tracks" id="recent-tracks" style="display:none;">
             <br>
             {% for song in response %}
             <tr class="song">
@@ -62,9 +62,9 @@
             </tr>
             {% endfor %}
         </table>
-        
     </div>
-
+    {% endif %}
+</div>
 
 <div id="playlist-tab" class="tabcontent">
     <h2>Feeling a certain way? Let us create a playlist for that! </h2>
@@ -82,12 +82,16 @@
         <button class="windows-button" type="submit" name="action" value="submit_mood">Get Mood Playlist</button>
     </form>
 
+    {% if action == 'submit_mood' and response %}
 
-    {% elif action == 'submit_mood' and response %}
-
-    <p>Playlist based on your mood "{{ user_mood }}":</p>
     <br>
-    <table class="rec-db">
+    <hr>
+    <br>
+
+    <div class="windows-box">
+    <h2 class="normal">Playlist based on your mood: <b>{{ user_mood }}<span class="blink-cursor">_</span></b></h2>
+    <br>
+    <table class="recent-tracks">
         {% for song in response %}
         <tr class="song">
             <td>
@@ -116,37 +120,44 @@
         </tr>
         {% endfor %}
     </table>
+    {% endif %}
+    </div>
 </div>
-
-<br>
-{% endif %}
-
 
 <script>
 function openModule(evt, tabModule) {
-  // Declare all variables
-  var i, tabcontent, tablinks;
+    // Declare all variables
+    var i, tabcontent, tablinks;
 
-  // Get all elements with class="tabcontent" and hide them
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
 
-  // Get all elements with class="tablinks" and remove the class "active"
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
 
-  // Show the current tab, and add an "active" class to the button that opened the tab
-  document.getElementById(tabModule).style.display = "block";
-  evt.currentTarget.className += " active";
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(tabModule).style.display = "block";
+    evt.currentTarget.className += " active";
+
+    // Store the active tab in localStorage
+    localStorage.setItem("activeTab", tabModule);
 }
 
 // Function to set default tab open
 function setDefaultTab() {
-  document.getElementsByClassName("tablinks")[0].click();
+    var activeTab = localStorage.getItem("activeTab");
+    if (activeTab) {
+        document.getElementById(activeTab).style.display = "block";
+        document.querySelector(".tablinks[onclick=\"openModule(event, '" + activeTab + "')\"]").className += " active";
+    } else {
+        document.getElementsByClassName("tablinks")[0].click();
+    }
 }
 
 /* For playing recent songs */
@@ -171,16 +182,16 @@ function togglePlay(button) {
 }
 
 function toggleTracks() {
-  var tracks = document.getElementById("recent-tracks");
-  var toggleText = document.getElementById("toggle-tracks");
+    var tracks = document.getElementById("recent-tracks");
+    var toggleText = document.getElementById("toggle-tracks");
 
-  if (tracks.style.display === "none") {
-    tracks.style.display = "table";
-    toggleText.innerHTML = '<span style="font-size:10px">&lt;&lt;</span> Minimize your recently played tracks';
-  } else {
-    tracks.style.display = "none";
-    toggleText.innerHTML = '<span style="font-size:10px">&gt;&gt;</span> See your recently played tracks';
-  }
+    if (tracks.style.display === "none") {
+        tracks.style.display = "table";
+        toggleText.innerHTML = '<span style="font-size:10px">&lt;&lt;</span> Minimize your recently played tracks';
+    } else {
+        tracks.style.display = "none";
+        toggleText.innerHTML = '<span style="font-size:10px">&gt;&gt;</span> See your recently played tracks';
+    }
 }
 
 // Call the function when the DOM is fully loaded

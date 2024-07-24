@@ -40,13 +40,9 @@
                 Let us in on your top genre picks, and we'll introduce some new tunes that 
                 match the vibe.
             </p>
-<<<<<<< HEAD
             <br>
             <br>
             <br>
-=======
-           <div class="med-break"></div>
->>>>>>> refs/remotes/origin/main
         </div>
         
     </div>
@@ -74,37 +70,39 @@
                 <div class="form-group">
                     {{ form.star_sign(size=32) }}
                 </div>
-
+                <br>
                 <div class="form-group">
                     {{ form.personality_traits(class_='personality-traits-textarea', rows=4, cols=50) }}
                 </div>
-
+                <br>
                 <div class="form-group">
                     {{ form.fav_genre1(size=32) }}
                     {{ form.optional_field1(size=32) }}
                 </div>
-
+                <br>
                 <div class="form-group">
                     {{ form.fav_genre2(size=32) }}
                     {{ form.optional_field2(size=32) }}
                 </div>
-
+                <br>
                 <div class="form-group">
                     {{ form.fav_genre3(size=32) }}
                     {{ form.optional_field3(size=32) }}
                 </div>
-
+                <br>
                 <div class="form-group">
-                    <div class="med-break"></div>
-                    <h3 class="user-form-h1">Include your listening history?</h3>
                     <br>
+                    <p><b>Include your listening history?</b></p>
                     {{ form.include_history() }}
                 </div>
 
+                <br>
+
+                <!-- <div class="form-group button-container"> -->
                 <div class="form-group button-container">
-                    <button type="submit">Get my songs!</button>
-                    <button type="button" onclick="clearForm()">Clear Form</button>
-                    <a class="button" href="{{ url_for('view_recommendations') }}">View Recommended Songs</a>
+                    <button style="color: blue" type="submit">Get my songs!</button>
+                    <button style="color: blue" type="button" onclick="clearForm()">Clear Form</button>
+                    <a style="color: blue" class="button" href="{{ url_for('view_recommendations') }}">View Recommended Songs</a>
 
                 </div>
             </form>
