@@ -3,14 +3,39 @@
 {% block title %}Playlist Analysis Results{% endblock %}
 
 {% block content %}
-    <h2>Playlist Analysis Results</h2>
-    
-    <div class="small-break"></div>
-    <p>{{ chat_response | safe }}</p>
-    <div class="small-break"></div>
+
+    <!-- Container for images and text side by side -->
+    <div class="header-container">
+        <!-- Container for images -->
+        <div class="image-container">
+            <!-- Background image div -->
+            <div class="background-image"></div>
+            <!-- Profile image div -->
+            {% if profile_image_url %}
+                <div class="profile-image" style="background-image: url('{{ profile_image_url }}');"></div>
+            {% endif %}
+        </div>
+
+        <!-- Container for text -->
+        <div class="text-container">
+            <h2>Welcome</h2>
+            <h3>{{ display_name }}</h3> 
+        </div>
+    </div>
+
+    <h3>Playlist Analysis Results</h3>
+
+    <!-- Display each section -->
+    {% for header, content in sections.items() %}
+        <div class="analysis-container">
+            <h2>{{ header }}</h2>
+            <div>{{ content|safe }}</div>
+        </div>
+    {% endfor %}
 
     <div class="return-buttons">
         <a class="button" href="{{ url_for('home') }}">Return Home</a>
         <a class="button" href="{{ url_for('insights') }}">Get More Insights!</a>
     </div>
+
 {% endblock %}

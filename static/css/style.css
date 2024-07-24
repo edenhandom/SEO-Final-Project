@@ -50,6 +50,7 @@
 * {
   padding: 0px;
   margin: 0px;
+  
 }
 
 h1 {
@@ -69,6 +70,9 @@ p {
   margin-bottom: 10px;
 }
 
+body {
+background-image: linear-gradient(to left top, #fafafa, #dee4f4, #b6d2ed, #82c2e0, #3ab3ca);
+}
 /********************* PAGE HEADER / LAYOUT *********************/
 
 /* Layout for Login and Home Pages */
@@ -99,6 +103,7 @@ p {
   align-items: center; /* Centers content horizontally */
   justify-content: start; /* Centers content vertically */
   text-align: center; /* Centers text within each element */
+  
 }
 
 /* Layout for Content Pages */
@@ -723,20 +728,24 @@ option {
   margin-top: 10px; 
 }
 
-.add-playlist-link {
-  font-size: 18px; 
-  color: #007bff; 
-  text-decoration: none; 
-  padding: 10px 20px; 
-  border: 2px solid #007bff; 
-  border-radius: 5px; 
-  display: inline-block; 
-  transition: background-color 0.3s, color 0.3s; 
+.insights-page .insights-button {
+  color: white;
+  background-color: #ABBBD2;
+  border: 2px solid #ABBBD2; /* Change this to your preferred border color */
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
-.add-playlist-link:hover {
-  background-color: #007bff; 
-  color: white; 
+.insights-page .insights-button:hover {
+  background-color: #ABBBD2; 
+  border-color: #ffffff; 
 }
 
 
@@ -855,6 +864,162 @@ option {
   font-weight: normal;
 }
 
-.recent-tracks .songs a{
+.recent-tracks .songs a {
   font-size: var(--main-text);
+}
+
+.insights-page .playlist-input {
+  border: 2px solid #ABBBD2; 
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 16px;
+  width: calc(100% - 20px); 
+  margin-bottom: 20px; 
+}
+
+.image-container {
+  position: relative; 
+  width: 300px; 
+  height: 300px; 
+  display: flex; 
+  align-items: center; 
+}
+
+.result-image {
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  position: relative; 
+}
+
+.profile-image {
+  position: absolute; 
+  top: 10px; 
+  left: 10px; 
+  width: 120px;
+  height: 88px; 
+  object-fit: cover; 
+  background-size: cover;  
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+  top: 54px;
+  left: 80px;
+}
+.background-image {
+  width: 100%; /* Make the background image cover the container */
+  height: 100%; /* Make the background image cover the container */
+  background-image: url('../images/computer.png');
+  background-size: cover; /* Ensure the image covers the container */
+  background-position: center; /* Center the background image */
+  background-repeat: no-repeat;
+  position: relative; /* Ensure profile image is positioned relative to this container */
+}
+.profile-info {
+  position: absolute;
+  margin-left: 120px; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Adjust the gap as needed */
+}
+.text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+div.button-container a.button {
+  padding: 10px 15px;
+}
+div.button-container {
+  display: flex;
+  align-content: center;
+}
+
+/********************* MUSIC RECS PAGE *********************/
+
+.notepad-rec-container {
+  font-family: 'Schoolbell', cursive; /* Apply the Schoolbell font */
+  position: relative;
+  width: 100%;
+  min-height: 70vh; /* Increase the height to fit content better */
+  background-image: url('../images/notepad.png');
+  background-size: cover; /* Make the image cover the entire container */
+  background-position: top center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align items at the top */
+  padding-top: 40px; /* Adjust padding to position content well */
+  margin-bottom: 20px; /* Add some margin at the bottom to separate from the button */
+}
+
+.notepad-rec {
+  padding: 20px;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 10px;
+  text-align: center; /* Center the text content */
+}
+
+.notepad-rec form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the form elements */
+}
+
+.notepad-rec label, .notepad-rec input, .notepad-rec button {
+  font-family: 'Schoolbell', cursive; /* Apply the Schoolbell font to form elements */
+}
+
+.notepad-rec label {
+  font-family: 'Schoolbell', cursive; /* Apply the Schoolbell font */
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.notepad-rec input {
+  padding: 5px;
+  margin-bottom: 20px;
+  font-size: 1em;
+  width: 80%; /* Adjust the width to make the input smaller */
+  max-width: 400px; /* Ensure the input does not exceed a reasonable width */
+}
+
+.notepad-rec button {
+  padding: 5px;
+  font-size: 1em;
+  background-color: var(--purple);
+  color: #333;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.notepad-rec button:hover {
+  background-color: transparent;
+  font-family: 'Schoolbell', cursive; /* Apply the Schoolbell font */
+  color: #ABBBD2;
+}
+
+/* Style the placeholder text */
+.notepad-rec input::placeholder {
+  font-family: 'Schoolbell', cursive;
+  color: #333; /* Adjust color as needed */
+  font-size: 1em; /* Adjust font size as needed */
+}
+
+div.return-buttons a.button {
+  padding: 10px 15px;
+}
+
+div.return-buttons {
+  display: flex;
+  align-content: center;
 }
