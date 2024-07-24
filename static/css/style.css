@@ -26,6 +26,7 @@
 * {
   padding: 0px;
   margin: 0px;
+  
 }
 
 h1 {
@@ -45,6 +46,9 @@ p {
   margin-bottom: 10px;
 }
 
+body {
+background-image: linear-gradient(to left top, #fafafa, #dee4f4, #b6d2ed, #82c2e0, #3ab3ca);
+}
 /********************* PAGE HEADER / LAYOUT *********************/
 
 /* Layout for Login and Home Pages */
@@ -75,6 +79,7 @@ p {
   align-items: center; /* Centers content horizontally */
   justify-content: start; /* Centers content vertically */
   text-align: center; /* Centers text within each element */
+  
 }
 
 /* Layout for Content Pages */
