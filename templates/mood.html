@@ -2,55 +2,89 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h2>Top Track Results</h2>
 
-<form method="POST">
-    <div class="form-group">
-        <button type="submit" name="action" value="request_mood">Request Mood</button>
-    </div>
+<!-- Tab links -->
+<div class="tab">
+    <button class="tablinks" onclick="openModule(event, 'mood-tab')" click="True">Guess Mood</button>
+    <button class="tablinks" onclick="openModule(event, 'playlist-tab')">Get a Playlist</button>
+</div>
 
-    <div class="form-group">
-        <input type="text" name="user_mood" placeholder="Enter your mood">
-        <button type="submit" name="action" value="submit_mood">Submit Mood</button>
-    </div>
-</form>
+<!-- Tab content -->
+<div id="mood-tab" class="tabcontent">
+    <h2>Can we guess how you've been feeling? </h2>
+    <p>
+        Using a deep dive into your past listening history, my advanced AI analyzes the tunes that you've been playing on repeat to deduce the emotions behind your musical choices!
+    </p>
+    <form class="window" method="POST">
+        <button class="windows-button" type="submit" name="action" value="request_mood">Guess my Mood</button>
+    </form>
 
-<br>
+    <!-- Content generated after user submits form -->
+    {% if action == 'request_mood' and response %}
 
-{% if action == 'request_mood' and response %}
-    <h2>Your mood is: {{ mood_response }}</h2>
-    <p>Your recently played tracks:</p>
     <br>
-    <table class="rec-db">
-        {% for song in response %}
-        <tr class="song">
-            <td>
-                <!-- Song Title -->
-                <a class="bold" href="{{ song.link }}" target="_blank">{{ song.song }}</a>
-                <br>
-                <!-- Song Artist -->
-                <i>{{ song.artist }}</i>
-            </td>
-            <!-- Song Preview -->
-            <td>
-                {% if song.preview_url %}
-                    <div class="audio-container">
-                        <button class="audio-button mono-font" onclick="togglePlay(this)">▶</button>
-                        <audio preload="none">
-                            <source src="{{ song.preview_url }}" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
-                        <span class="audio-time mono-font">0:00</span>
-                    </div>
-                {% else %}
-                    No preview available
-                {% endif %}
-                <br>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-{% elif action == 'submit_mood' and response %}
+    <hr>
+    <br>
+    <div class="windows-box">
+        <h2 class="normal">Your mood is: <b>{{ mood_response }}<span class="blink-cursor">_</span></b></h2>
+        <p class="highlight" id="toggle-tracks" onclick="toggleTracks()">
+            <span style="font-size:10px">&gt;&gt;</span> See your recently played tracks
+        </p>
+        <p style="margin-bottom:0px"> ____________________________________________________________ </p>
+        
+        <table id="recent-tracks" style="display:none;">
+            <br>
+            {% for song in response %}
+            <tr class="song">
+                <td>
+                    <!-- Song Title -->
+                    <a class="bold" href="{{ song.link }}" target="_blank">{{ song.song }}</a>
+                    <br>
+                    <!-- Song Artist -->
+                    <i>{{ song.artist }}</i>
+                </td>
+                <!-- Song Preview -->
+                <td>
+                    {% if song.preview_url %}
+                        <div class="audio-container">
+                            <button class="audio-button mono-font" onclick="togglePlay(this)">▶</button>
+                            <audio preload="none">
+                                <source src="{{ song.preview_url }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                            <span class="audio-time mono-font">0:00</span>
+                        </div>
+                    {% else %}
+                        No preview available
+                    {% endif %}
+                    <br>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        
+    </div>
+
+
+<div id="playlist-tab" class="tabcontent">
+    <h2>Feeling a certain way? Let us create a playlist for that! </h2>
+    <p>
+        I also offer a unique "generate playlist" feature! Simply tell me how 
+        you're feeling, or choose from a range of moods, and my AI will craft a custom playlist tailored just for you. 
+    </p>
+    <p>
+        Whether you need tunes to match your current vibe or want to switch 
+        things up, we've got you covered!
+    </p>
+
+    <form class="window" method="POST">
+        <input class="windows-textbox" type="text" name="user_mood" placeholder="Enter your mood">
+        <button class="windows-button" type="submit" name="action" value="submit_mood">Get Mood Playlist</button>
+    </form>
+
+
+    {% elif action == 'submit_mood' and response %}
+
     <p>Playlist based on your mood "{{ user_mood }}":</p>
     <br>
     <table class="rec-db">
@@ -82,12 +116,76 @@
         </tr>
         {% endfor %}
     </table>
+</div>
+
+<br>
 {% endif %}
 
-<br><br>
 
-<div class="return-buttons">
-    <a class="button" href="{{ url_for('home') }}">Return Home</a>
-</div>
+<script>
+function openModule(evt, tabModule) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(tabModule).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+// Function to set default tab open
+function setDefaultTab() {
+  document.getElementsByClassName("tablinks")[0].click();
+}
+
+/* For playing recent songs */
+function togglePlay(button) {
+    var audio = button.nextElementSibling;
+    var audioTime = button.nextElementSibling.nextElementSibling;
+    if (audio.paused) {
+        audio.play();
+        button.textContent = '❚❚';
+    } else {
+        audio.pause();
+        button.textContent = '▶';
+    }
+    audio.addEventListener('timeupdate', function() {
+        var minutes = Math.floor(audio.currentTime / 60);
+        var seconds = Math.floor(audio.currentTime % 60);
+        if (seconds < 10) {
+            seconds = '0' + seconds;
+        }
+        audioTime.textContent = minutes + ':' + seconds;
+    });
+}
+
+function toggleTracks() {
+  var tracks = document.getElementById("recent-tracks");
+  var toggleText = document.getElementById("toggle-tracks");
+
+  if (tracks.style.display === "none") {
+    tracks.style.display = "table";
+    toggleText.innerHTML = '<span style="font-size:10px">&lt;&lt;</span> Minimize your recently played tracks';
+  } else {
+    tracks.style.display = "none";
+    toggleText.innerHTML = '<span style="font-size:10px">&gt;&gt;</span> See your recently played tracks';
+  }
+}
+
+// Call the function when the DOM is fully loaded
+document.addEventListener("DOMContentLoaded", setDefaultTab);
+
+</script>
 
 {% endblock %}
