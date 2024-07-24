@@ -504,6 +504,11 @@ def music_recs():
                 return "Failed to get track features or no tracks found in the playlist.", 400
     return render_template('music_recs.html')
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login_page'))
+
 @app.route("/update_server", methods=['POST'])
 def webhook():
     if request.method == 'POST':
