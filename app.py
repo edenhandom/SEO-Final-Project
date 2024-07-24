@@ -69,7 +69,6 @@ def login():
 
 # Callback route to handle the redirect from Spotify
 
-
 @app.route('/callback')
 def callback():
     code = request.args.get('code')
@@ -86,7 +85,6 @@ def callback():
 
     user_session.set_token(spotify_client.token)
     return redirect(url_for('home'))
-
 
 @app.route('/home')
 def home():

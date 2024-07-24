@@ -3,6 +3,10 @@
   /* Colors */
   --screen-color: #ABBBD2;
   --ipod-text-color: #272A4B;
+  --windows-silver: rgb(198, 198, 198);
+  --windows-grey: rgb(130, 130, 130);
+  --windows-shadow: #333;
+  --windows-white: #e6e6e6;
 
   /* Ipod Stuff */
   --ipod-height: 42.5vh;
@@ -15,11 +19,31 @@
 
   /* Text Stuff */
   --main-font: "Poppins", sans-serif;
+  --tech-font: "Pixelify Sans", sans-serif;
   --header: 1.1em;
-  --main-text: 1em;
+  --main-text: 0.9em;
   --subheader: 1em;
 }
- 
+
+/* Animations ! */
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.blink-cursor {
+  display: inline;
+  font-weight: bold;
+  font-size: var(--subheader); 
+  animation: blink 1s step-end infinite;
+}
 
 /********************* GENERAL PAGE STUFF *********************/
 
@@ -161,7 +185,7 @@ background-image: linear-gradient(to left top, #fafafa, #dee4f4, #b6d2ed, #82c2e
   position: relative;
   margin: 1rem 1rem 6vh 1rem;
 
-  font-family: "Pixelify Sans", sans-serif;
+  font-family: var(--tech-font);
 }
 
 #ipod img {
@@ -196,7 +220,7 @@ background-image: linear-gradient(to left top, #fafafa, #dee4f4, #b6d2ed, #82c2e
 
 /* Menu Items */
 
-.menu-item a:hover {
+.menu-item a:hover, .menu-item a.active{
   background-color: var(--ipod-text-color);
   color: var(--screen-color);
 }
@@ -259,6 +283,7 @@ background-image: linear-gradient(to left top, #fafafa, #dee4f4, #b6d2ed, #82c2e
 }
 
 #text {
+  font-size: var(--ipod-text-size);
   grid-area: text;
   padding: 1px 6px;
 
@@ -345,7 +370,7 @@ background-image: linear-gradient(to left top, #fafafa, #dee4f4, #b6d2ed, #82c2e
 }
 
 /* Ensure input fields are responsive */
-input[type="text"], textarea {
+.formpaper-container input[type="text"], textarea {
   background-color: transparent;
   border: 1px solid transparent; /* Transparent border */
   color: #333;
@@ -356,7 +381,7 @@ input[type="text"], textarea {
   box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
-input[type="text"]::placeholder, textarea::placeholder {
+.formpaper-container input[type="text"]::placeholder, textarea::placeholder {
   color: #000000;
   font-size: 1em;
   font-family: 'Courier New', Courier, monospace;
@@ -388,7 +413,7 @@ input[type="text"]::placeholder, textarea::placeholder {
 */
 
 /* Style for the submit button */
-button[type="submit"], button[type="button"]{
+.formpaper-container button[type="submit"], button[type="button"]{
   text-decoration: underline;
   text-align: center;
   background-color: transparent;
@@ -401,7 +426,8 @@ button[type="submit"], button[type="button"]{
   transition: background-color 0.3s ease;
 }
 
-button[type="submit"]:hover {
+
+.formpaper-container button[type="submit"]:hover {
   background-color: #eee;
   font-family: 'Courier New', Courier, monospace;
 
@@ -412,6 +438,7 @@ button[type="button"]:hover {
   font-family: 'Courier New', Courier, monospace;
 
 }
+
 
 .center-button {
   display: flex;
@@ -594,7 +621,7 @@ option {
 }
 
 .mono-font {
-  font-family: var(--pixel), monospace;
+  font-family: var(--tech-font), monospace;
 }
 
 .submit-content {
@@ -719,6 +746,126 @@ option {
 .insights-page .insights-button:hover {
   background-color: #ABBBD2; 
   border-color: #ffffff; 
+}
+
+
+/*********************** Old Windows Aesthetic ***********************/
+.window {
+  width: 100%;
+  padding: 0px;
+  display: flex;
+}
+
+
+.windows-button {
+  font-size: var(--main-text);
+  font-family: var(--tech-font);
+  color: var(--windows-shadow);
+  background: var(--windows-silver);
+
+  border-left: 2px solid #e6e6e6;
+  border-top: 2px solid #e6e6e6;
+  border-right: 2px solid var(--windows-grey);
+  border-bottom: 2px solid var(--windows-grey);
+
+  box-shadow: -1px -1px var(--windows-shadow), 1px 1px var(--windows-shadow), 1px -1px var(--windows-shadow), -1px 1px var(--windows-shadow);
+
+  margin: 0px;
+  padding: 7px 25px;
+}
+
+.windows-button:active {
+  border-right: 2px solid #e6e6e6;
+  border-bottom: 2px solid #e6e6e6;
+  border-left: 2px solid var(--windows-grey);
+  border-top: 2px solid var(--windows-grey);
+}
+
+.windows-textbox {
+  font-size: var(--main-text);
+  font-family: var(--tech-font);
+  color: blue;
+
+  border-radius: 0px;
+  border-right: 2px solid #e6e6e6;
+  border-bottom: 2px solid #e6e6e6;
+  border-left: 2px solid var(--windows-grey);
+  border-top: 2px solid var(--windows-grey);
+
+  margin: 0px;
+  padding: 7px 5px;
+
+  outline: 1px solid var(--windows-shadow);
+  outline-offset: 0px;
+
+  flex-grow: 1;
+}
+
+
+.windows-box {
+  background-color: white;
+
+  border-right: 2px solid var(--windows-silver);
+  border-bottom: 2px solid var(--windows-silver);
+  border-left: 2px solid var(--windows-shadow);
+  border-top: 2px solid var(--windows-shadow);
+
+  box-shadow: -2px -2px var(--windows-grey), 2px 2px var(--windows-grey), 2px -2px var(--windows-white), -2px 2px var(--windows-white);
+
+  padding: 2vh 1vw;
+}
+
+/* Tabs */
+/* Style the tab */
+
+
+.tablinks {
+  
+  margin: 0px;
+  padding: 5px 10px;
+  border-left: 2px solid var(--windows-white);
+  border-top: 2px solid var(--windows-white);
+  border-right: 2px solid var(--windows-grey);
+  border-bottom: 2px solid var(--windows-silver);
+  border-radius: 4px 4px 0px 0px;
+
+  box-shadow: -2px -2px var(--windows-silver), 2px -2px var(--windows-shadow);
+  background-color: var(--windows-silver);
+}
+
+.tablinks.active {
+  box-shadow: -2px -2px var(--windows-silver), 2px -2px var(--windows-shadow), 2px 2px var(--windows-silver);
+}
+
+/* Style the tab content */
+.tabcontent {
+  font-family: var(--tech-font);
+
+  display: none;
+  padding: 3vw 5vh;
+
+  border-top: 2px solid var(--windows-white);
+  border-left: 2px solid var(--windows-white);
+  border-right: 2px solid var(--windows-grey);
+  border-bottom: 2px solid var(--windows-grey);
+  border-radius: 0px 5px 0px 0px;
+  background-color: var(--windows-silver);
+
+  box-shadow: -2px -2px var(--windows-silver), 2px -2px var(--windows-shadow) , 2px -2px var(--windows-silver);
+
+}
+
+.highlight {
+  color: blue;
+  text-decoration: underline;
+}
+
+.normal {
+  font-weight: normal;
+}
+
+.recent-tracks .songs a {
+  font-size: var(--main-text);
 }
 
 .insights-page .playlist-input {
@@ -871,6 +1018,7 @@ div.button-container {
 div.return-buttons a.button {
   padding: 10px 15px;
 }
+
 div.return-buttons {
   display: flex;
   align-content: center;
