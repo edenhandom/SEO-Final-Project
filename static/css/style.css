@@ -54,7 +54,8 @@
 }
 
 h1 {
-  font-size: var(--header);
+  /* font-size: var(--header); */
+  font-size: 40px;
   font-family: var(--main-font);
 
   font-weight: 500;
@@ -75,8 +76,33 @@ p {
   margin-bottom: 10px;
 }
 
-body {
+/* body {
 background-image: linear-gradient(to left top, #fafafa, #dee4f4, #b6d2ed, #82c2e0, #3ab3ca);
+} */
+
+body {
+    background: linear-gradient(317deg, #c7c8c8, #57a6db);
+    background-size: 400% 400%;
+
+    -webkit-animation: AnimationName 32s ease infinite;
+    -moz-animation: AnimationName 32s ease infinite;
+    animation: AnimationName 32s ease infinite;
+}
+
+@-webkit-keyframes AnimationName {
+    0%{background-position:13% 0%}
+    50%{background-position:88% 100%}
+    100%{background-position:13% 0%}
+}
+@-moz-keyframes AnimationName {
+    0%{background-position:13% 0%}
+    50%{background-position:88% 100%}
+    100%{background-position:13% 0%}
+}
+@keyframes AnimationName {
+    0%{background-position:13% 0%}
+    50%{background-position:88% 100%}
+    100%{background-position:13% 0%}
 }
 /********************* PAGE HEADER / LAYOUT *********************/
 
@@ -152,6 +178,15 @@ background-image: linear-gradient(to left top, #fafafa, #dee4f4, #b6d2ed, #82c2e
   text-decoration: none;
   color: var(--ipod-text-color);
 }
+
+#page-header h1{
+    font-family: "Pixelify Sans", sans-serif;
+}
+
+/* div#template-layout div#page-header h1 {
+  font-family: 'LL Baguio';
+  font-size: 22px;
+} */
 #page-header a:hover {
   text-decoration: underline;
   font-weight: 500;
@@ -353,7 +388,7 @@ background-image: linear-gradient(to left top, #fafafa, #dee4f4, #b6d2ed, #82c2e
 .personality-traits-textarea {
   width: 80%; 
   max-width: 600px; 
-  min-width: 300px; 
+  min-width: 250px; 
 }
 
 .clip-image {
@@ -409,7 +444,7 @@ background-image: linear-gradient(to left top, #fafafa, #dee4f4, #b6d2ed, #82c2e
 
 .formpaper-container input[type="text"]::placeholder, textarea::placeholder {
   color: #000000;
-  font-size: 1em;
+  font-size: 0.9em;
   font-family: 'Courier New', Courier, monospace;
 }
 
@@ -440,7 +475,6 @@ background-image: linear-gradient(to left top, #fafafa, #dee4f4, #b6d2ed, #82c2e
 
 /* Style for the submit button */
 .formpaper-container button[type="submit"], button[type="button"]{
-  text-decoration: underline;
   text-align: center;
   background-color: transparent;
   border: 1px solid transparent;
@@ -456,8 +490,14 @@ background-image: linear-gradient(to left top, #fafafa, #dee4f4, #b6d2ed, #82c2e
 .formpaper-container button[type="submit"]:hover {
   background-color: #eee;
   font-family: 'Courier New', Courier, monospace;
+  text-decoration: underline;
+}
+
+.formpaper-container button[type="button"]:hover{
+  text-decoration: underline;
 
 }
+
 
 button[type="button"]:hover {
   background-color: #eee;
@@ -592,6 +632,8 @@ option {
 .button:hover {
   background-color: #eee;
   color: #63598596; 
+  text-decoration: underline;
+
 }
 
 .center-button {
@@ -652,7 +694,6 @@ option {
 
 .button {
   background-color: var(--purple);
-  text-decoration: underline;
   color: #ABBBD2;
   padding: 10px 20px;
   font-family: 'Courier New', Courier, monospace;
@@ -688,14 +729,14 @@ option {
 .notepad-container {
   position: relative;
   width: 100%;
-  min-height: 80vh; /* Reduce the height to fit content better */
-  background-image: url('../images/notepad.png');
+  min-height: 70vh; /* Reduce the height to fit content better */
+  background-image: url('../images/sticky_page.png');
   background-size: contain; /* Scale the image down proportionally */
   background-position: top center;
   background-repeat: no-repeat;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Align items at the top */
+  align-items: center; /* Align items at the top */
   padding-top: 20px; /* Adjust padding to position content well */
   margin-bottom: 20px; /* Add some margin at the bottom to separate from the button */
 }
@@ -735,7 +776,7 @@ option {
   padding: 10px 20px;
   font-size: 1em;
   background-color: var(--purple);
-  color: var(--screen-color);
+  color: hsl(30deg 34.72% 71.76%);
   border: none;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -743,6 +784,7 @@ option {
 
 .notepad button:hover {
   background-color: var(--aqua);
+  text-decoration: underline dotted hsl(30deg 34.72% 71.76%) 5px;
 }
 
 .add-playlist-container {
@@ -785,6 +827,10 @@ option {
   border: none;
   border-bottom: dotted black 3px;
   background-color: transparent;
+}
+
+.notepad-container button[type="submit"]:hover {
+  font-weight: 500;
 }
 
 
@@ -976,7 +1022,15 @@ option {
 
 div.button-container a.button {
   padding: 10px 15px;
+  color: #272A4B;
+  font-family: "Pixelify Sans", sans-serif;
+  text-decoration: none;
 }
+
+div.button-container a.button:hover {
+    text-decoration: underline;
+}
+
 div.button-container {
   display: flex;
   align-content: center;
@@ -1057,6 +1111,13 @@ div.button-container {
 
 div.return-buttons a.button {
   padding: 10px 15px;
+  color: #272A4B;
+  font-family: "Pixelify Sans", sans-serif;
+  text-decoration: none;
+}
+
+div.return-buttons a.button:hover {
+  text-decoration: underline;
 }
 
 div.return-buttons {
