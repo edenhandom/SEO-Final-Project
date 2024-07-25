@@ -71,6 +71,11 @@ h2 {
   margin: 0px 0px 10px 0px;
 }
 
+main.container h3 {
+  text-align: center;
+  font-size: larger;
+}
+
 p {
   font-size: var(--main-text);
   margin-bottom: 10px;
@@ -155,6 +160,8 @@ body {
 
   overflow: hidden; /* So the whole page wont scroll */
 }
+
+
 
 #page-header {
   grid-area: header;
