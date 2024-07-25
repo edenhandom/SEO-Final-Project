@@ -478,33 +478,19 @@ body {
   text-align: center;
   background-color: transparent;
   border: 1px solid transparent;
-  color: #ABBBD2;
+  color: #272A4B;
   padding: 10px 20px;
   font-size: 1em;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Pixelify Sans", sans-serif;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 
-.formpaper-container button[type="submit"]:hover {
-  background-color: #eee;
-  font-family: 'Courier New', Courier, monospace;
+.formpaper-container button:hover {
+  font-family: "Pixelify Sans", sans-serif;
   text-decoration: underline;
 }
-
-.formpaper-container button[type="button"]:hover{
-  text-decoration: underline;
-
-}
-
-
-button[type="button"]:hover {
-  background-color: #eee;
-  font-family: 'Courier New', Courier, monospace;
-
-}
-
 
 .center-button {
   display: flex;
@@ -524,7 +510,7 @@ button[type="button"]:hover {
 /* Style for the select field */
 select {
   background-color: transparent;
-  border: 1px solid #FFFBFB;
+  border: 1px solid #272A4B;
   color: #000000;
   padding: 10px;
   font-size: 1em;
@@ -831,6 +817,11 @@ option {
 
 .notepad-container button[type="submit"]:hover {
   font-weight: 500;
+}
+
+.notepad-container select#playlist_href {
+  text-align: center;
+  width: 80%;
 }
 
 
