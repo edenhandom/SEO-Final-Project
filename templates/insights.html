@@ -16,8 +16,13 @@
         <div class="notepad-rec">
             <form action="{{ url_for('insights') }}" method="post">
                 <div class="med-break"></div>
-                <label for="playlist_url">Spotify Playlist URL:</label>
-                <input type="text" id="playlist_url" name="playlist_url" placeholder="Enter your playlist URL:" required>                
+                <label for="playlist_href">Spotify Playlist:</label>
+                <select id="playlist_href" name="playlist_href" required>
+                    <option value="" disabled selected>Select a playlist</option>
+                    {% for playlist in playlists %}
+                        <option value="{{ playlist.playlist_href }}">{{ playlist.playlist_name }}</option>
+                    {% endfor %}
+                </select>
                 <button type="submit">Get Insights</button>
             </form>
             {% with messages = get_flashed_messages() %}

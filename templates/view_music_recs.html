@@ -4,10 +4,13 @@
 <main class="container">
     <h3>Your Recommended Songs</h3>
     <div class="med-break"></div>
+
+    <div class="med-break"></div>
     <div class="songreceipt-container">
         <div class="songreceipt">
             <img src="static/images/green-tape.png" alt="Tape" class="green-tape">
-            <table>        {% for song in recommendations %}
+            <table>
+                {% for song in recommendations %}
                 <tr class="song">
                     <td>
                         <!-- Song Title -->
@@ -18,28 +21,29 @@
                     </td>
                     <!-- Song Preview -->
                     <td>
-                {% if song.preview_url %}
-                <div class="audio-container">
-                    <button class="audio-button mono-font" onclick="togglePlay(this)">▶</button>
-                    <audio preload="none">
-                        <source src="{{ song.preview_url }}" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                    <span class="audio-time mono-font">0:00</span>
-                </div>
-                {% else %}
-                No preview available
-                {% endif %}
-                <br>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    <br>
-    <div class="return-buttons">
-        <a class="button" href="{{ url_for('home') }}">Return Home</a>
-        <a class="button" href="{{ url_for('music_recs') }}">Get New Recs</a>
-    </div>
+                        {% if song.preview_url %}
+                        <div class="audio-container">
+                            <button class="audio-button mono-font" onclick="togglePlay(this)">▶</button>
+                            <audio preload="none">
+                                <source src="{{ song.preview_url }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                            <span class="audio-time mono-font">0:00</span>
+                        </div>
+                        {% else %}
+                        No preview available
+                        {% endif %}
+                        <br>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            <br>
+            <div class="return-buttons">
+                <a class="button" href="{{ url_for('home') }}">Return Home</a>
+                <a class="button" href="{{ url_for('music_recs') }}">Get New Recs</a>
+                <a style="color: blue" class="button" href="{{ url_for('view_recommendations') }}">View Recommended Songs</a>
+            </div>
         </div>
     </div>
 </main>
