@@ -19,15 +19,52 @@
         <div class="notepad-rec">        
             <form action="{{ url_for('music_recs') }}" method="post">
                 <div class="med-break"></div>
+                <br>
+                <br>
+                <br>
                 <label for="playlist_url">Spotify Playlist URL:</label>
-                <input type="text" id="playlist_url" name="playlist_url" placeholder="Enter your playlist URL:" required>                
-            
+                <input type="text" id="playlist_url" name="playlist_url" placeholder="Enter your playlist URL:" required>
+                
+                <!-- Dropdown for optional feature selection -->
+                <div class="med-break"></div>
+                <label for="specify_features">Do you want to specify target features?</label>
+                <select id="specify_features" name="specify_features" onchange="toggleFeatureFields()">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+                
+                <!-- Optional feedback fields, initially hidden -->
+                <div id="optional_features" style="display: none;">
+                    <div class="med-break"></div>
+                    <label for="target_popularity">Target Popularity (optional):</label>
+                    <input type="number" id="target_popularity" name="target_popularity" step="1" min="0" max="100">
+                    
+                    <div class="med-break"></div>
+                    <label for="target_danceability">Target Danceability (optional):</label>
+                    <input type="number" id="target_danceability" name="target_danceability" step="0.01" min="0" max="1">
+                    
+                    <div class="med-break"></div>
+                    <label for="target_energy">Target Energy (optional):</label>
+                    <input type="number" id="target_energy" name="target_energy" step="0.01" min="0" max="1">
+                    
+                    <div class="med-break"></div>
+                    <label for="target_valence">Target Valence (optional):</label>
+                    <input type="number" id="target_valence" name="target_valence" step="0.01" min="0" max="1">
+                    
+                    <div class="med-break"></div>
+                    <label for="target_acousticness">Target Acousticness (optional):</label>
+                    <input type="number" id="target_acousticness" name="target_acousticness" step="0.01" min="0" max="1">
+                    
+                    <div class="med-break"></div>
+                    <label for="target_tempo">Target Tempo (optional):</label>
+                    <input type="number" id="target_tempo" name="target_tempo" step="0.01">
+                </div>
+                
                 <div class="button-container">  
                     <button type="submit">Get some recs!</button>
                 </div>
-
             </form>
-        
+    
             {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <ul>
@@ -39,5 +76,18 @@
             {% endwith %}
         </div>
     </div>
+    
+    <script>
+        function toggleFeatureFields() {
+            var specifyFeatures = document.getElementById('specify_features').value;
+            var optionalFields = document.getElementById('optional_features');
+            
+            if (specifyFeatures === 'yes') {
+                optionalFields.style.display = 'block';
+            } else {
+                optionalFields.style.display = 'none';
+            }
+        }
+    </script>
     
 {% endblock %}

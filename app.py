@@ -12,6 +12,8 @@ import pandas as pd
 import random
 from collections import Counter
 
+import sqlalchemy as db
+
 ''''
 Import our Classes
 '''
@@ -43,7 +45,7 @@ Session(app)
 CLIENT_ID = os.environ.get("CLIENT_ID")
 CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
 USER_KEY = os.environ.get("USER_KEY")
-SCOPE = 'playlist-read-private user-library-read user-read-recently-played'
+SCOPE = 'playlist-read-private user-library-read user-read-recently-played playlist-modify-public playlist-modify-private'
 REDIRECT_URI = os.environ.get("REDIRECT_URI")
 
 # Connect to the spotify API
@@ -84,7 +86,21 @@ def callback():
             page='status.html',
             text=text)
 
+    # If login successful, set token and store user playlists
     user_session.set_token(spotify_client.token)
+
+    playlists = spotify_client.get_user_playlists()
+    playlists_df = spotify_client.json_to_db(playlists)
+
+    # Create Engine Object
+    engine = db.create_engine('sqlite:///playlists.db')
+
+    playlists_df.to_sql('users_playlists', con=engine, if_exists='replace', index=False)
+
+    with engine.connect() as connection:
+        query_result = connection.execute(db.text("SELECT * FROM users_playlists")).fetchall()
+        print(pd.DataFrame(query_result))
+
     return redirect(url_for('home'))
 
 @app.route('/home')
@@ -100,6 +116,9 @@ def about_us():
 # Route to provide user with a mood based on their recently played tracks
 @app.route('/mood', methods=['GET', 'POST'])
 def mood():
+    global recommended_songs_df
+    user_id = session.get('user_id')
+
     recent_tracks_data = spotify_client.get_recent_tracks()
     tracks_artists = {
         track['track']['name']: ', '.join([artist['name'] for
@@ -180,7 +199,11 @@ def mood():
                         song['track_id'])
 
                 response = song_with_preview
-
+        # Add the recommendations to the DataFrame
+        new_rows = pd.DataFrame(response)
+        new_rows['user_id'] = user_id
+        recommended_songs_df = pd.concat(
+            [recommended_songs_df, new_rows], ignore_index=True)
     return render_template(
         'mood.html',
         top_tracks=tracks_artists,
@@ -350,13 +373,25 @@ def view_recommendations():
         recommendations=user_recommendations.to_dict(orient='records')
     )
 
+# get playlists in playlist.db
+def get_playlists():
+    # Create Engine Object
+    engine = db.create_engine('sqlite:///playlists.db')
+
+    with engine.connect() as connection:
+        query_result = connection.execute(db.text("SELECT playlist_href, playlist_name FROM users_playlists")).fetchall()
+        return query_result
+    
 # Displays personal insight based on provided playlist
-
-
 @app.route('/insights', methods=['GET', 'POST'])
 def insights():
+    
+    # get playlists for drop down from database
+    playlists = get_playlists()
+
     if request.method == 'POST':
-        playlist_url = request.form.get('playlist_url')
+
+        playlist_url = request.form.get('playlist_href')
         if playlist_url:
             display_name, profile_image_url = spotify_client.get_user_profile_info()
             track_artist = spotify_client.get_public_playlist_data(
@@ -414,16 +449,20 @@ def insights():
 
         flash("Please enter a valid playlist URL.")
         return redirect(url_for('insights'))
-
-    return render_template('insights.html')
+    
+    return render_template('insights.html', playlists=playlists)
 
 # Provides personalized spotify recommendations based on playlist
 
 
 @app.route('/music_recs', methods=['GET', 'POST'])
 def music_recs():
+    global recommended_songs_df
+    user_id = session.get('user_id')
+
     if request.method == 'POST':
         playlist_url = request.form.get('playlist_url')
+        specify_features = request.form.get('specify_features')
 
         if playlist_url:
             try:
@@ -456,6 +495,28 @@ def music_recs():
                     'target_popularity': int(average_popularity)
                 }
 
+                # Override with user-provided values if they exist
+                if specify_features == 'yes':
+                    user_popularity = request.form.get('target_popularity')
+                    user_danceability = request.form.get('target_danceability')
+                    user_energy = request.form.get('target_energy')
+                    user_valence = request.form.get('target_valence')
+                    user_acousticness = request.form.get('target_acousticness')
+                    user_tempo = request.form.get('target_tempo')
+
+                    if user_popularity:
+                        aggregated_features['target_popularity'] = int(user_popularity)
+                    if user_danceability:
+                        aggregated_features['target_danceability'] = float(user_danceability)
+                    if user_energy:
+                        aggregated_features['target_energy'] = float(user_energy)
+                    if user_valence:
+                        aggregated_features['target_valence'] = float(user_valence)
+                    if user_acousticness:
+                        aggregated_features['target_acousticness'] = float(user_acousticness)
+                    if user_tempo:
+                        aggregated_features['target_tempo'] = float(user_tempo)
+
                 artist_ids = []
                 for track in track_features:
                     artists_id = track['artist_id']
@@ -479,7 +540,7 @@ def music_recs():
                         target_valence=aggregated_features['target_valence'],
                         target_acousticness=aggregated_features['target_acousticness'],
                         target_tempo=aggregated_features['target_tempo'],
-                        target_popularity=average_popularity)
+                        target_popularity=aggregated_features['target_popularity'])
                 except BaseException:
                     print("Error with recommendations")
 
@@ -496,13 +557,17 @@ def music_recs():
                     ]
                 else:
                     recommendations = []
-
+                new_rows = pd.DataFrame(recommendations)
+                new_rows['user_id'] = user_id
+                recommended_songs_df = pd.concat(
+                    [recommended_songs_df, new_rows], ignore_index=True)
                 return render_template(
                     'view_music_recs.html',
                     recommendations=recommendations)
             else:
                 return "Failed to get track features or no tracks found in the playlist.", 400
     return render_template('music_recs.html')
+
 
 @app.route('/logout')
 def logout():
@@ -518,5 +583,6 @@ def webhook():
         return 'Updated PythonAnywhere successfully', 200
     else:
         return 'Wrong event type', 400
+
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=3000)

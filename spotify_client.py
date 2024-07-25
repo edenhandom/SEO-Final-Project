@@ -4,6 +4,7 @@ import re
 from flask import session, redirect, url_for, render_template
 from pprint import pprint
 import json
+from pd
 
 class SpotifyClient:
     AUTH_URL = 'https://accounts.spotify.com/api/token'
@@ -94,7 +95,7 @@ class SpotifyClient:
         else:
             print("Failed to retrieve playlist data")
             print("Status Code: ", response.status_code)
-            return None
+            return None    
 
 
     def get_recent_tracks(self):
@@ -732,8 +733,11 @@ class SpotifyClient:
             print(params)
             # Add optional parameters
             for key, value in kwargs.items():
-                params[key] = value
-            print(kwargs)
+                if value is not None:
+                    if key in {'target_popularity'}:  # Add more keys if there are other integer parameters
+                        params[key] = int(value)  # Convert to integer
+                    else:
+                        params[key] = value
             
             response = requests.get(recommendations_url, headers=headers, params=params)
             print(response.request.url)
