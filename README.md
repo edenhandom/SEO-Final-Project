@@ -2,7 +2,7 @@
 
 
 ### About
-This application is to process your Spotify playlists to provide insights into your personality and recommendations of what music may resonate with you. This application builds upon a previous project, 
+This application processes your Spotify playlists, recently listened to music, and inputted personal information to provide insights into your personality and recommendations of what music may resonate with you. This application builds upon a previous project, 
 [Tune Teller AI](https://github.com/BenjKodi7/SEOPairedProgramming), to provide additional insights and personalized music recommendations.
 
 ### Project Requirements:
@@ -22,18 +22,17 @@ This application is to process your Spotify playlists to provide insights into y
 
 #### Installing Libraries
 
-- pip install pandas
-- pip install sqlalchemy
-- pip install sqlite3
-- pip install os
-- pip install openai
-- pip install requests
-- pip install re
-- pip install markupsafe
-- pip install flask
-- pip install spotipy 
+All libraries should be included in the requirements.txt file.
+
+Install all using: pip install -r requirements.txt
 
 ### Requirements and dependencies
+
+Sign in to Spotify using these test credentials:
+
+Email: spotifytesttest123456@gmail.com
+
+Password: EdenEdnaAbiBenjyMoodMix123!
 
 This program uses:
 - [Spotify API](https://developer.spotify.com/documentation/web-api)
