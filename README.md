@@ -4,6 +4,7 @@
 
 [![Watch the video](https://github.com/user-attachments/assets/9834d69a-a54a-41c5-a5a8-5195bc10649f)](https://github.com/user-attachments/assets/657afffe-4fb2-470b-9adf-3c8e459bf6f0)
 
+https://bkodi.pythonanywhere.com/
 
 ### About
 This application processes your Spotify playlists, recently listened to music, and inputted personal information to provide insights into your personality and recommendations of what music may resonate with you. This application builds upon a previous project, 
